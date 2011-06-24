@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9.00"
+	Name="Airbattles_vc8"
+	ProjectGUID="{D98555D0-EDC4-4860-9594-FFD5ED2C722E}"
+	RootNamespace="Airbattles_vc8"
+	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
+			ConfigurationType="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;..\Source\Wave Files&quot;;&quot;..\Source\Terrain Files&quot;;&quot;..\Source\Skybox Files&quot;;&quot;..\Source\GUI Files&quot;;&quot;..\Source\Event Receiver Files&quot;;&quot;..\Source\Airplane Files&quot;;&quot;..\Source\Camera Files&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
+			ConfigurationType="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
+			<File
+				RelativePath=".\Airplane Files\Airplane.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\AirplaneFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Terrain Files\AridTerrain.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\B25.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Camera.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CameraFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\Concorde.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\Enemy.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\F14.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Camera Files\FollowPlayerCamera.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Event Receiver Files\GameEventReceiver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GUI Files\GameMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GUI Files\HUD.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GUI Files\MainGUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\Naboo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\Player.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GUI Files\PlayerSelectGUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Skybox Files\Sunset.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Wave Files\Wave.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Wave Files\Wave1.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Wave Files\WaveController.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Wave Files\WaveFactory.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
+		</Filter>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
+			<File
+				RelativePath=".\Airplane Files\Airplane.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Terrain Files\AridTerrain.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\B25.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\Concorde.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\Enemy.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\F14.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Camera Files\FollowPlayerCamera.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Event Receiver Files\GameEventReceiver.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GUI Files\GameMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GUI Files\HUD.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GUI Files\MainGUI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\Naboo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Airplane Files\Player.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GUI Files\PlayerSelectGUI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Skybox Files\Sunset.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Wave Files\Wave.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Wave Files\Wave1.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Wave Files\WaveController.cpp"
+				>
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\debug\BuildLog.htm"
+			DeploymentContent="true"
+			>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>
