@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config>
+<!--This is a config file for ToyBoX-->
+<startUpModel file="ninja.b3d" />
+<modelTexture file="nskinwh.jpg" />
+<startUpMap file="20kdm2.bsp"/>
+<startUpWeapon file="pistol.bsp"/>
+<messageText caption="ToyBoX">
+Supported Mesh formats are:
+- Irrlicht scene and mesh (.irr, .irrmesh, .xml)
+- 3D Studio (.3ds)
+- Blitz3D (.b3d)
+- COLLADA 1.2/1.3 (.dae, .xml)
+- Cartography shop 4 (.csm)
+- DirectX (.x)
+- DeleD (.dmf)
+- Maya (.obj)
+- Milkshape (.ms3d)
+- My3D (.my3D)
+- OCT (.oct)
+- Ogre3d (.mesh)
+- Pulsar LMTools (.lmts)
+- Quake 3 levels (.bsp)
+- Quake 2 models (.md2)
+- Stereolithography format (.stl)
+</messageText>
+</config>
