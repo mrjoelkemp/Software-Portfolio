@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style name="FountainRatingBar" parent="@android:style/Widget.RatingBar.Small">
+<item name="android:progressDrawable">@drawable/fountain_ratingbaricon </item>
+<item name="android:minHeight">1dip</item>
+<item name="android:maxHeight">10dip</item>
+</style>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Find a Fountain</string>
+    
+    <!-- Login -->
+    <string name="login_activity_title">Login</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_welcome">Please enter your credentials!</string>
+    
+    <!-- Fountain Balloon -->
+    <string name="fountain_rating_label">Rating</string>
+    <string name="fountain_status_label">Status</string>
+</resources>
