@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>joey.png</Source>
+      <Name>joey</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\joey.xnb</Output>
+      <Time>2011-04-05T17:20:55.5736656-04:00</Time>
+    </Item>
+    <Item>
+      <Source>kiss.png</Source>
+      <Name>kiss</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\kiss.xnb</Output>
+      <Time>2011-04-05T17:21:13.904685-04:00</Time>
+    </Item>
+    <Item>
+      <Source>monika.png</Source>
+      <Name>monika</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\monika.xnb</Output>
+      <Time>2011-04-05T17:20:41.199863-04:00</Time>
+    </Item>
+    <Item>
+      <Source>blank.png</Source>
+      <Name>blank</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\blank.xnb</Output>
+      <Time>2010-07-06T09:45:51.8889173-04:00</Time>
+    </Item>
+    <Item>
+      <Source>title.jpg</Source>
+      <Name>title</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\title.xnb</Output>
+      <Time>2011-04-05T17:57:54.6586062-04:00</Time>
+    </Item>
+    <Item>
+      <Source>explosionSmall.png</Source>
+      <Name>explosionSmall</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\explosionSmall.xnb</Output>
+      <Time>2011-04-06T01:56:38.3481682-04:00</Time>
+    </Item>
+    <Item>
+      <Source>GameOverScreen.png</Source>
+      <Name>GameOverScreen</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\GameOverScreen.xnb</Output>
+      <Time>2011-04-14T19:59:31.1929629-04:00</Time>
+    </Item>
+    <Item>
+      <Source>candle.png</Source>
+      <Name>candle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\candle.xnb</Output>
+      <Time>2011-04-14T20:06:23.4843744-04:00</Time>
+    </Item>
+    <Item>
+      <Source>sparks.png</Source>
+      <Name>sparks</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\sparks.xnb</Output>
+      <Time>2011-04-14T20:22:57.582032-04:00</Time>
+    </Item>
+    <Item>
+      <Source>Kootenay.spritefont</Source>
+      <Name>Kootenay</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\Kootenay.xnb</Output>
+      <Time>2010-06-10T14:16:03.6690024-04:00</Time>
+    </Item>
+    <Item>
+      <Source>kiss2.wav</Source>
+      <Name>kiss2</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\kiss2.xnb</Output>
+      <Time>2011-04-14T20:39:34.2534101-04:00</Time>
+    </Item>
+    <Item>
+      <Source>birthday2.wav</Source>
+      <Name>birthday2</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\birthday2.xnb</Output>
+      <Time>2011-04-14T20:57:28.3578454-04:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <BuildConfiguration>Debug</BuildConfiguration>
+      <CompressContent>false</CompressContent>
+      <RootDirectory>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\Content\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\bin\x86\Debug\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2009-05-28T01:16:14-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2009-05-28T01:16:06-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2009-05-28T01:16:16-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2009-05-28T01:16:26-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2009-05-28T01:16:12-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2009-05-28T01:16:06-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Windows\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\3.1.0.0__6d5c3888ef60e27d\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2009-12-03T11:56:07.2919564-05:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>

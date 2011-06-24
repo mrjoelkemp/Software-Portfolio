@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/Games/!svn/ver/76/Gesture/Gesture/Content/effects
+END
+BloomExtract.fx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/Games/!svn/ver/72/Gesture/Gesture/Content/effects/BloomExtract.fx
+END
+BloomCombine.fx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/Games/!svn/ver/72/Gesture/Gesture/Content/effects/BloomCombine.fx
+END
+GaussianBlur.fx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/Games/!svn/ver/72/Gesture/Gesture/Content/effects/GaussianBlur.fx
+END

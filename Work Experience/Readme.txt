@@ -1,0 +1,2 @@
+Author: Joel Kemp
+Purpose: This folder contains the projects done at companies where the source was available for uploading. This is an incomplete list of projects, the rest of my work experience can be found on my resume located at my personal website's About Me page.

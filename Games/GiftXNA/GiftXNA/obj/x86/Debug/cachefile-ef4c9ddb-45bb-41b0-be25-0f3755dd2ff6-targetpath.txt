@@ -1,0 +1,12 @@
+Content\joey.xnb
+Content\kiss.xnb
+Content\monika.xnb
+Content\blank.xnb
+Content\title.xnb
+Content\explosionSmall.xnb
+Content\GameOverScreen.xnb
+Content\candle.xnb
+Content\sparks.xnb
+Content\Kootenay.xnb
+Content\kiss2.xnb
+Content\birthday2.xnb

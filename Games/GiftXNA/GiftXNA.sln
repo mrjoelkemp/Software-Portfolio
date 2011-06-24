@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiftXNA", "GiftXNA\GiftXNA.csproj", "{79C90913-AA4E-4426-B50C-E923758FB310}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79C90913-AA4E-4426-B50C-E923758FB310}.Debug|x86.ActiveCfg = Debug|x86
+		{79C90913-AA4E-4426-B50C-E923758FB310}.Debug|x86.Build.0 = Debug|x86
+		{79C90913-AA4E-4426-B50C-E923758FB310}.Release|x86.ActiveCfg = Release|x86
+		{79C90913-AA4E-4426-B50C-E923758FB310}.Release|x86.Build.0 = Release|x86
+		{EF4C9DDB-45BB-41B0-BE25-0F3755DD2FF6}.Debug|x86.ActiveCfg = Debug|x86
+		{EF4C9DDB-45BB-41B0-BE25-0F3755DD2FF6}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
