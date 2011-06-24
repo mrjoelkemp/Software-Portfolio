@@ -1,0 +1,25 @@
+
+<div id="item">
+		<div id="item_info">
+			
+			<div id="item_title">
+				<p>
+				<img class="fullsize" src="<%= "/article/showImage/#{@article.id}" %> ">
+				<%= @article.title %>
+				</p>
+			</div>					
+			
+			<%= @article.date %> <br />
+			Posted by: <%= @article.author %> <br />
+			<br /> <br />
+			 
+			 <div id="item_detail">					
+				<p class="indentedToImageEnd"><%= @article.body %></p>
+			</div>
+			
+		</div>
+	</div>
+<% show_div_if( admin_logged_in? ) do %>	
+	<%= link_to 'Edit', :action => 'edit', :id => @article %> |
+<% end %>
+<%= link_to 'Back', :action => 'list' %>

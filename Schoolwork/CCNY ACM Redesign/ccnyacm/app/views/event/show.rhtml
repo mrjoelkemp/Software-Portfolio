@@ -1,0 +1,28 @@
+
+<div id="item">
+		<div id="item_info" class="italicized">
+			
+			<div id="item_title" class="normalized">
+					<p>
+					<img class="fullsize" src="<%= "/event/showImage/#{@event.id}" %> ">
+					<%= @event.title %>
+					<p> <%= @event.speaker %> </p>
+					</p>
+			</div>					
+			<div id="date" class="italicized">
+				<%= @event.date %> <br />
+			</div>
+			<div id="item_location">
+				<%= @event.time %>, <%= @event.room %>
+			</div>		
+			<div id="item_detail" class="normalized">
+					<p class="indentedToImageEnd"> <%= @event.abstract %> </p>
+					<p class="indentedToImageEnd"> <%= @event.full_text %> </p>
+					<p class="indentedToImageEnd"> <%= @event.bio %> </p>
+			</div>
+		</div>
+</div>
+<% show_div_if( admin_logged_in? ) do %>
+	<%= link_to 'Edit', :action => 'edit', :id => @event %> |
+<% end %>
+<%= link_to 'Back to Events', :action => 'list' %>

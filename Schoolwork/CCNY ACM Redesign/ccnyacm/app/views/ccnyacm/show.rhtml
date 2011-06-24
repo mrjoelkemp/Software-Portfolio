@@ -1,0 +1,40 @@
+
+
+<% for column in User.content_columns %>
+<p>
+  <b><%= column.human_name %>:</b>
+	<% if column.name == "picture_data" %>
+		<%= image_tag("/ccnyacm/showImage/#{@user.id}", :alt => "Image") %>
+    <% else %>
+		<%=h @user.send(column.name) %>
+    <% end %>
+</p>
+<% end %>
+
+<%= link_to 'Edit', :action => 'edit', :id => @user %> |
+<%= link_to 'Back', :action => 'list' %>
+
+<% if @user.has_messages? %>
+  <h3>Messages</h3>
+  <table>
+  <% for message in @user.messages.reverse %>
+    <tr>
+      <td><%= message.sent_on %></td>
+      <td><%= message.time %></td>
+      <td ><%= message.from %></td>
+      <td ><%= message.to %></td>
+      <td ><%= message.subject %></td>
+      <td ><%= message.body %></td>
+	  <td><%= link_to 'Destroy', { :action => 'destroyMessage', :messageId => message, :userId =>@user}, :confirm => 'Are you sure?', :method => :post %></td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>
+
+<%= start_form_tag :action => 'postMessage', :id => @user %>
+  Post Message:
+  <p>
+	<%= text_area 'message', 'body', :cols => 25, :rows => 10 %>
+  </p>
+  <%= submit_tag 'Send Message' %>
+<%= end_form_tag %>

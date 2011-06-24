@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>CCNY ACM :: <%= controller.action_name %></title>
+	<%= stylesheet_link_tag 'styles' %>
+  	<script src="/javascripts/prototype.js" type="text/javascript"></script>
+	<script src="/javascripts/scriptaculous.js" type="text/javascript"></script>
+	<script src="/javascripts/effects.js" type="text/javascript"></script>
+	<script src="/javascripts/dragdrop.js" type="text/javascript"></script>
+</head>
+
+<body>
+	
+<div id="USERMENU" style="display:none;">
+	<script type= "text/javascript">
+	<!--	
+		new Draggable("USERMENU");
+	-->	
+	</script>
+
+	<a href=# class="dropDownItem" onclick='new Effect.DropOut("USERMENU"); new Effect.BlindDown("PROFILE");'>My Profile</a><br />
+	<a href=# class="dropDownItem" onclick='new Effect.DropOut("USERMENU");new Effect.Appear("MESSAGE");'>Messages</a><br />
+	<a href="/account/logout" class="dropDownItem">Logout</a><br /><br />
+	
+	<input type="button" value="Close" align=bottom onclick='new Effect.DropOut("USERMENU");' />		
+</div>
+
+<div id="REG" style="display:none;" >
+	<script type= "text/javascript">
+	<!--	
+		new Draggable("REG");
+	-->	
+	</script>
+
+<!--	
+	<div align="right">
+		<a href=# onclick='new Effect.DropOut("REG");'>
+			<img class="closeLink" src="images/closeButton.png" />
+		</a>
+	</div>
+-->	
+	<fieldset>
+		<legend>User Registration</legend>
+		<!--<form id="userdetails" name="details" method="post" action=""> -->
+		<!-- <% form_tag({:action => '/user/new'}, :multipart => true) do %> -->
+		<form action="/user/create" enctype="multipart/form-data" method="post">
+		
+		<a href=# onclick='new Effect.DropOut("REG");'>
+			<img align="right" class="closeLink" src="images/closeButton.png" alt="Close" />
+		</a>
+
+		<!--[form:user]-->
+		<label for="user_userName">UserName</label><br/>
+		<input id="user_userName" name="user[userName]" size="30" type="text" /> <br />
+		
+		<label for="user_password">Password</label><br/>
+		<input id="user_password" name="user[password]" size="30" type="password" /><br />
+		
+		<label for="user_firstName">First Name</label><br/>
+		
+		<input id="user_firstName" name="user[firstName]" size="30" type="text" /><br />
+		
+		<label for="user_lastName">Last Name</label><br/>
+		<input id="user_lastName" name="user[lastName]" size="30" type="text" /><br />
+		
+		<label for="user_emailAddress">Email Address</label><br/>
+		<input id="user_emailAddress" name="user[emailAddress]" size="30" type="text" /><br />
+		
+		<label for="user_ccnyEmailAddress">CCNY Email Address</label><br/>
+		<input id="user_ccnyEmailAddress" name="user[ccnyEmailAddress]" size="30" type="text" /><br />
+		
+		<label for="user_phone">Phone #</label><br/>
+		<input id="user_phone" name="user[phone]" size="30" type="text" /><br />
+		
+		<label for="user_websiteUrl">Website URL</label><br/>
+		<input id="user_websiteUrl" name="user[websiteUrl]" size="30" type="text" /><br />
+		
+		<label for="user_tmp_file">Profile Image</label><br/>
+		 <input type="hidden" name="MAX_FILE_SIZE" value="20000000" />
+			<input type="file" name="user[tmp_file]" size="25" /> <br />
+			
+		<label for="user_interests">Interests</label><br/>
+		<textarea cols="30" id="user_interests" name="user[interests]" rows="5"></textarea><br />
+		
+		  
+			<%= submit_tag "Create" %>
+			<input type="button" value = "Cancel" align=bottom onclick = "Effect.DropOut('REG');" />
+
+		<% end %>
+		</form>
+		
+	 </fieldset>
+
+</div><!--end REG-->
+
+<div id="LOGIN" style="display:none;" >
+	<script type= "text/javascript">
+	<!--	
+		new Draggable("LOGIN");
+	-->	
+	</script>
+
+	<form action="/account/login" method="post">
+	Please Log In
+	<p>
+	<label>Username:</label>
+	<%= text_field_tag 'login' %>
+	</p>
+	<p>
+	<label>Password:</label>
+	<%= password_field_tag 'password' %>
+	</p>
+	<p><%= submit_tag 'login' %>	<input type="button" value = "Cancel" align=bottom onclick = "Effect.DropOut('LOGIN');" /></p>
+	</form>
+	
+</div><!--end Login-->
+
+<div id ="PROFILE" style="display:none;">
+	<script type= "text/javascript">
+	<!--	
+		new Draggable("PROFILE");
+	-->	
+	</script>
+	<p>INCOMPLETE</p>
+	<label>Username: </label> <br />
+	<label>First Name:</label> <br />
+	<label>Last Name:</label> <br />
+	<label>Interests:</label> <br />
+	<input type="button" value = "Modify" onclick = "" />
+	<input type="button" value = "Cancel" align=bottom onclick = "Effect.DropOut('PROFILE');" />
+</div><!--end Profile-->
+
+<div id="MESSAGE" style="display:none;">
+	<input type="button" value = "Cancel" align=bottom onclick = "Effect.DropOut('MESSAGE');" />
+</div><!--end Message-->
+
+<div id="container" >
+	<div id="header">
+		<div id="logo">
+			<a href="/ccnyacm" class="logo" onclick="">
+				<img class="logo" src="/images/ACM-Logo-medium_mod.jpg" alt="ACM Logo">
+			</a>
+		</div><!--end Logo-->
+
+		<div id="acm_title">
+			The Association for Computing Machinery <br />
+			City College of New York Chapter
+		</div> <!--end ACM Title-->
+
+		<% show_div_if( ! logged_in? ) do %>
+			<p class="loginInfo"> 
+
+				<a href=# onclick="new Effect.Appear('LOGIN');"> Login </a> / 
+				<a href=# onclick="new Effect.Appear('REG');"> Register </a> <br />
+			</p>
+		<% end %>		
+
+		<% show_div_if( logged_in? ) do %>
+			<p class="loginInfo">
+					<% unless @current_user.blank? %>
+						<i>Logged in: </i>
+					<%= @current_user.userName %>
+					<% else %>
+						<em>Not logged in.</em>
+					<% end %>
+			
+				<a href=# onmouseover='new Effect.Pulsate(this);' onclick='new Effect.BlindDown("USERMENU");' class="dropDownIcon">
+				<img src="/images/dropDown.png" class="dropDown"/> </a> <br />
+			</p>
+		<% end %>
+	</div><!--end Header-->
+
+	<div id="flash" style="color: green">
+		<%= flash[:notice] %>
+	</div>
+
+	<div id="menu">
+	  <div id="menuitem"><a class="menulink" href='/ccnyacm'> Home </a></div> 
+	  <div id="menuitem"><a class="menulink" href="/article"> News </a></div> 
+	  <div id="menuitem"><a class="menulink" href="/event"> Events </a></div> 
+	  <div id="menuitem"><a class="menulink" href="/user"> People </a></div> 
+	  <div id="menuitem"><a class="menulink" href="/resources.html"> Resources </a></div> 
+	  <div id="menuitem"><a class="menulink" href="http://www-cs.engr.ccny.cuny.edu/"> CS Dept </a></div> 
+	</div><!--end Menu-->
+
+	<div id="content">
+		<%= yield  %>
+	</div><!--end Content-->
+
+	<div id="footer">
+		<a class ="contact" href="mailto:acm@ccny.cuny.edu"> Contact Us </a> <br />
+
+		CSc 473 Web Site Design <br />
+		Fall 2007 - Final Project <br />
+		Codanda Appachu, Piotr Dudzicz, Joel Kemp, Daniel Ranells <br />
+		Copyright CCNY ACM 2007
+	</div><!--end Footer-->
+</body>
+</div><!--end Container-->
+</html>

@@ -1,0 +1,9 @@
+<div id="PageTitle">Edit Your Profile</div>
+
+<% form_tag ({:id => @user, :action => 'update'}, :multipart => true) do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag 'Edit' %>
+<% end %>
+
+<%= link_to 'Show', :action => 'show', :id => @user %> |
+<%= link_to 'Back', :action => 'list' %>

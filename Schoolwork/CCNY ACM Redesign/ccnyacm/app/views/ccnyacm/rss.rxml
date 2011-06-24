@@ -1,0 +1,34 @@
+
+xml.instruct!
+
+xml.rss "version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/" do
+ xml.channel do
+
+   xml.title(       "CCNY ACM Events and News")
+   xml.link(        url_for :only_path => false, :controller => 'ccnyacm')
+   xml.description( "Events and News from the CCNY ACM Chapter")
+   
+   #xml.title       "Events"
+   @events.each do |event|
+     xml.item do
+       xml.title(       "Event: " + event.title)
+       xml.link(        url_for :only_path => false, :controller => 'event', :action => 'show', :id => event.id)
+	   xml.description( event.abstract)
+       xml.guid(        url_for :only_path => false, :controller => 'event', :action => 'show', :id => event.id)
+     end
+   end
+
+   
+   
+   #xml.title       "News"
+   @articles.each do |article|
+     xml.item do
+       xml.title(       "News: " + article.title)
+       xml.link(        url_for :only_path => false, :controller => 'article', :action => 'show', :id => article.id)
+       xml.description( article.body)
+       xml.guid(        url_for :only_path => false, :controller => 'article', :action => 'show', :id => article.id)
+     end
+   end
+
+ end
+end

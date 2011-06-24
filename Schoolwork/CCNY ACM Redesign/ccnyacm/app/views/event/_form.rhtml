@@ -1,0 +1,34 @@
+<%= error_messages_for 'event' %>
+
+<!--[form:event]-->
+
+<label for="event_title">Title</label><br/>
+<%= text_field 'event', 'title'  %><br/>
+
+<label for="event_speaker">Speaker</label><br/>
+<%= text_field 'event', 'speaker'  %><br/>
+
+<label for="event_date">Date</label><br/>
+<%= date_select 'event', 'date'  %><br/>
+
+<label for="event_time">Time</label><br/>
+<%= time_select 'event', 'time', {:minute_step => 15} %><br/>
+
+<label for="event_room">Room</label><br/>
+<%= text_field 'event', 'room'  %><br/>
+
+<label for="event_abstract">Event Description / Abstract</label><br/>
+<%= text_area 'event', 'abstract', "cols" => 40 , "rows" => 10 %><br/>
+
+<label for="event_bio">Speaker Biography</label><br/>
+<%= text_area 'event', 'bio', "cols" => 40 , "rows" => 10  %><br/>
+
+<label for="event_full_text">Event Full Details</label><br/>
+<%= text_area 'event', 'full_text', "cols" => 40 , "rows" => 10 %><br/>
+
+<label for="event_image">Image</label><br/>
+ <input type="hidden" name="MAX_FILE_SIZE" value="20000000" />
+	<input type="file" name="event[img_file]" size="25" /> <br/>
+<br/>
+<!--[eoform:event]-->
+

@@ -1,0 +1,38 @@
+
+<div id="EventsAndNews">
+
+<div id="PageTitle" > 
+    Recent Events and News 
+	<a href=" <%= "/ccnyacm/rss" %> ">
+		<img class="feed" src="/images/feed-icon-28x28.png">
+	</a>
+</div>
+	
+
+<ul id="recent_events">
+	<div id ="PageTitle">Events</div> 
+	<% if @events.size.zero? %>
+		<em>No Recent Events!</em>
+	<% else %>
+	<%= render :partial => 'event',
+			:collection => @events %>
+	<% end %>
+	
+</ul> 
+		
+<ul id="recent_articles">
+	<div id ="PageTitle">News</div>
+	<% if @articles.size.zero? %>
+		<em>No Recent Articles!</em>
+	<% else %>
+	<%= render :partial => 'article',
+			:collection => @articles %>
+	<% end %>
+</ul>
+
+
+
+<%= link_to 'Previous page', { :page => @article_pages.current.previous } if @article_pages.current.previous %>
+<%= link_to 'Next page', { :page => @article_pages.current.next } if @article_pages.current.next %> 
+
+</div>

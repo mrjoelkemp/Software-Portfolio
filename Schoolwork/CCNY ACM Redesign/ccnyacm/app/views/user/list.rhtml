@@ -1,0 +1,37 @@
+<div id="PageTitle"> 
+People
+</div>
+
+<% for user in @users %>
+	<div id="item">
+		<div id="item_info">
+		
+			<div id="item_title" class="normalized">
+				<a href=" <%= "/user/show/#{user.id}" %> ">
+				<% if user.picture_data.blank? %>
+					<img class="thumb" src="/images/blankProfileImage.jpg">
+				<% else %>
+					<img class="thumb" src="<%= "/user/showImage/#{user.id}" %> ">
+				<% end %>
+				<%=h user.send("userName") %>			
+				</a>	
+			</div>
+			
+			
+			<div id="name" class="verdanaText"><%=h user.send("firstName") %> <%=h user.send("lastName") %></div>
+			<div id="interests" class="verdanaText"><%=h user.send("interests") %></div>
+		<% show_div_if( admin_logged_in? ) do %> 				
+			<%= link = link_to 'Edit', :action => 'edit', :id => user %>
+			<%= link_to 'Destroy', { :action => 'destroy', :id => user }, :confirm => 'Are you sure?', :method => :post %>
+			
+			<% end %>
+			
+		</div>
+	</div>
+<% end %>
+
+<%= link_to 'Previous page', { :page => @user_pages.current.previous } if @user_pages.current.previous %>
+<%= link_to 'Next page', { :page => @user_pages.current.next } if @user_pages.current.next %> 
+<% show_div_if( admin_logged_in? ) do %>
+	<%= link_to 'New user', :action => 'new' %>
+<% end %>

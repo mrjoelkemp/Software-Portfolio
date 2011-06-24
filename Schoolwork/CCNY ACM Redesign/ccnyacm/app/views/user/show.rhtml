@@ -1,0 +1,62 @@
+
+<div id="item_info">
+	<div id="thumb">
+		<% if @user.picture_data.blank? %>
+			<img src="/images/blankProfileImage.jpg">
+		<% else %>
+			<%= image_tag("/user/showImage/#{@user.id}", :alt => "Image", :class => "fullsize") %>
+		<% end %>
+	</div>
+	<div id="item_title">
+		<%=h @user.send("firstName") %> <%=h @user.send("lastName") %>
+	</div>
+	<div id="interests">
+		Interests: <%=h @user.send("interests") %>
+	</div>
+	<div id="user_website">
+		<a href="<%=h @user.send("websiteUrl") %>"> <%=h @user.send("websiteUrl") %> </a>
+	</div>
+</div>
+	
+<% show_div_if(  admin_logged_in? ) do %>
+	<%= link_to 'Destroy', { :action => 'destroy', :id => @user}, :confirm => 'Are you sure?', :method => :post %>
+<% end %>
+
+<% show_div_if( admin_logged_in? || belongs_to_user? ) do %>
+	<%= link_to 'Edit', :action => 'edit', :id => @user %> 
+<% end %>
+
+<%= link_to 'Back', :action => 'list' %>
+
+<br />
+<% show_div_if( logged_in? ) do %>
+<% if @user.has_messages? %>
+  <table>
+  <tr>
+    <td>
+<%= start_form_tag :action => 'postMessage', :id => @user %>
+  <p>
+	<%= text_area 'message', 'body', :cols => 35, :rows => 5 %>
+  </p>
+  <%= submit_tag 'Send Message' %>
+<%= end_form_tag %>
+    </td>
+    <td>
+       <table>	
+  <% for message in @user.messages.reverse %>
+    <tr>
+      <td><%= message.from %> said <%= message.body %> on <%= message.sent_on.to_s %></td>
+      <td ></td>
+      <td ></td>
+	  <% show_div_if( admin_logged_in? ) do %>
+		<td><%= link_to 'Destroy', { :action => 'destroyMessage', :messageId => message, :userId =>@user}, :confirm => 'Are you sure?', :method => :post %></td>
+	  <% end %>
+    </tr>
+  <% end %>
+  </table>
+  </td>
+  </tr>
+  </table>
+<% end %>
+
+<% end %>

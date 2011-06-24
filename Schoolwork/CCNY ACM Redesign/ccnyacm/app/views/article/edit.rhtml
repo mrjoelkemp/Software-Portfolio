@@ -1,0 +1,9 @@
+<h1>Editing article</h1>
+
+<% form_tag ({:id => @article, :action => 'update'}, :multipart => true) do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag 'Edit' %>
+<% end %>
+
+<%= link_to 'Show', :action => 'show', :id => @article %> |
+<%= link_to 'Back', :action => 'list' %>

@@ -1,0 +1,11 @@
+
+<li id="recent_article">
+<div id="topCorner">&nbsp;</div>
+<a href=" 
+<%= "/article/show/#{article.id}" %> "><img id="list_thumb" src="<%= "/article/showImage/#{article.id}" %> ">
+<%= article.title %>	
+</a><br><br>
+Date: <%= article.date %> <br>
+Posted by: <%= article.author %> <br>
+<%= article.body[0..40] %>... <br>
+</li>

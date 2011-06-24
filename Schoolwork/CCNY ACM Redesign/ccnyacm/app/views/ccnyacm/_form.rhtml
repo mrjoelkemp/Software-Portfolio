@@ -1,0 +1,37 @@
+<%= error_messages_for 'user' %>
+
+<!--[form:user]-->
+<p><label for="user_userName">UserName</label><br/>
+<%= text_field 'user', 'userName'  %></p>
+
+<p><label for="user_password">Password</label><br/>
+<%= password_field 'user', 'password'  %></p>
+
+<p><label for="user_firstName">Firstname</label><br/>
+<%= text_field 'user', 'firstName'  %></p>
+
+<p><label for="user_lastName">Lastname</label><br/>
+<%= text_field 'user', 'lastName'  %></p>
+
+<p><label for="user_emailAddress">Emailaddress</label><br/>
+<%= text_field 'user', 'emailAddress'  %></p>
+
+<p><label for="user_ccnyEmailAddress">Ccnyemailaddress</label><br/>
+<%= text_field 'user', 'ccnyEmailAddress'  %></p>
+
+<p><label for="user_phone">Phone</label><br/>
+<%= text_field 'user', 'phone'  %></p>
+
+<p><label for="user_websiteUrl">Websiteurl</label><br/>
+<%= text_field 'user', 'websiteUrl'  %></p>
+
+<p><label for="user_tmp_file">ProfileImage</label><br/>
+<p> <input type="hidden" name="MAX_FILE_SIZE" value="20000000" />
+	<input type="file" name="user[tmp_file]" size="25" /> </p>
+	
+
+
+<p><label for="user_interests">Interests</label><br/>
+<%= text_area 'user', 'interests'  %></p>
+<!--[eoform:user]-->
+

@@ -1,0 +1,38 @@
+<div id="PageTitle"> 
+Events
+</div>
+<% for event in @events %>
+<div id="item">
+		<div id="item_info" class="italicized">
+			
+			<div id="item_title" class="normalized">
+				<div id="thumb">
+				<a href=" <%= "/event/show/#{event.id}" %> ">
+				<img class="thumb" src="<%= "/event/showImage/#{event.id}" %> ">
+				<%=h event.send("title") %>								
+				</a>	
+				</div>	
+			</div>
+					
+
+			<div id="date"> <%=h event.send("date") %>, <%=h event.send("time") %>  <br /></div>
+			<div id="item_location"> <%=h event.send("room") %> <br /> <br /></div>
+		</div>
+		
+		<div id="item_detail" class="indentedToImage indented verdanaText">
+				<%=h event.send("abstract") %>
+				<% show_div_if( admin_logged_in? ) do %>
+					<%= link_to 'Edit', :action => 'edit', :id => event %>
+					<%= link_to 'Destroy', { :action => 'destroy', :id => event }, :confirm => 'Are you sure?', :method => :post %>
+				<% end %>
+		</div>
+</div>
+<% end %>
+
+
+<%= link_to 'Previous page', { :page => @event_pages.current.previous } if @event_pages.current.previous %>
+<%= link_to 'Next page', { :page => @event_pages.current.next } if @event_pages.current.next %> 
+
+<% show_div_if( admin_logged_in? ) do %>
+	<%= link_to 'New event', :action => 'new' %>
+<% end %>

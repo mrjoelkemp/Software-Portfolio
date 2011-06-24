@@ -1,0 +1,23 @@
+<%= error_messages_for 'article' %>
+
+<!--[form:article]-->
+
+<p><label for="article_title">Title</label><br/>
+<%= text_field 'article', 'title'  %></p>
+
+<p><label for="article_author">Author</label><br/>
+<%= text_field 'article', 'author'  %></p>
+
+<p><label for="article_date">Date</label><br/>
+<%= date_select 'article', 'date'  %></p>
+
+<p><label for="article_body">Body</label><br/>
+<%= text_area 'article', 'body'  %></p>
+
+<p><label for="article_image">Image</label><br/>
+<p> <input type="hidden" name="MAX_FILE_SIZE" value="20000000" />
+	<input type="file" name="article[img_file]" size="25" /> </p>
+</p>
+
+<!--[eoform:article]-->
+

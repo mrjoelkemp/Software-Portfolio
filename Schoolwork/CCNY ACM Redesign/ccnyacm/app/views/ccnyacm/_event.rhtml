@@ -1,0 +1,13 @@
+
+<li id=recent_event>
+<div id="topCorner">&nbsp;</div>
+<a href=" 
+<%= "/event/show/#{event.id}" %> "><img id="list_thumb" src="<%= "/event/showImage/#{event.id}" %> ">
+<%= event.title %>	
+</a><br><br>
+Date: <%= event.date %> <br>
+Speaker: <%= event.speaker %> <br>
+Abstract: <br>
+<%= event.abstract[0..40] %>... <br>
+</li>
+

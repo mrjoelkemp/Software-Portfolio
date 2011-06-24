@@ -1,0 +1,39 @@
+<div id="PageTitle"> 
+News 
+</div>
+
+<% for article in @articles %>
+<div id="item">
+		<div id="item_info">
+			
+			<div id="item_title" class="normalized">
+				<a href=" <%= "/article/show/#{article.id}" %> ">
+				<img class="thumb" src="<%= "/article/showImage/#{article.id}" %> "> 
+				<%=h article.send("title") %>
+				</a>	
+			</div>
+			
+			
+			<div id="date">	<%=h article.send("date") %> </div>
+			<div id="author"> Posted by: <%=h article.send("author") %>	</div>
+			
+		</div>
+			 <div id="item_detail" class="normalized indentedToImage indented verdanaText">
+					<%=h article.send("body") %>
+					<% show_div_if( admin_logged_in? ) do %>
+						<%= link_to 'Edit', :action => 'edit', :id => article %>
+						<%= link_to 'Destroy', { :action => 'destroy', :id => article }, :confirm => 'Are you sure?', :method => :post %>
+					<% end %>
+			</div>
+	</div>
+
+<% end %>
+
+ 
+<%= link_to 'Previous page', { :page => @article_pages.current.previous } if @article_pages.current.previous %>
+<%= link_to 'Next page', { :page => @article_pages.current.next } if @article_pages.current.next %> 
+
+<% show_div_if( admin_logged_in? ) do %>
+   <%= link_to 'New article', :action => 'new' %>
+<% end %>
+
