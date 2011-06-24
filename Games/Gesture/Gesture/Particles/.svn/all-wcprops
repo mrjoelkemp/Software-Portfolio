@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/Games/!svn/ver/90/Gesture/Gesture/Particles
+END
+ParticleManager.cs
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/Games/!svn/ver/89/Gesture/Gesture/Particles/ParticleManager.cs
+END
+Particle.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/Games/!svn/ver/87/Gesture/Gesture/Particles/Particle.cs
+END
+ShockwaveParticleSystem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/Games/!svn/ver/76/Gesture/Gesture/Particles/ShockwaveParticleSystem.cs
+END
+ExplosionSmokeParticleSystem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/Games/!svn/ver/80/Gesture/Gesture/Particles/ExplosionSmokeParticleSystem.cs
+END
+ParticleSystem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/Games/!svn/ver/90/Gesture/Gesture/Particles/ParticleSystem.cs
+END
+CrossFusionShockwave.cs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/Games/!svn/ver/90/Gesture/Gesture/Particles/CrossFusionShockwave.cs
+END
+ExplosionParticleSystem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/Games/!svn/ver/80/Gesture/Gesture/Particles/ExplosionParticleSystem.cs
+END
+SmokePlumeParticleSystem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/Games/!svn/ver/80/Gesture/Gesture/Particles/SmokePlumeParticleSystem.cs
+END

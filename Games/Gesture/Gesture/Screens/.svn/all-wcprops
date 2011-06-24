@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/Games/!svn/ver/91/Gesture/Gesture/Screens
+END
+HighScoreScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/Games/!svn/ver/91/Gesture/Gesture/Screens/HighScoreScreen.cs
+END
+LoadingScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/Games/!svn/ver/74/Gesture/Gesture/Screens/LoadingScreen.cs
+END
+MessageBoxScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/Games/!svn/ver/74/Gesture/Gesture/Screens/MessageBoxScreen.cs
+END
+StatsScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/Games/!svn/ver/75/Gesture/Gesture/Screens/StatsScreen.cs
+END
+BackgroundScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/Games/!svn/ver/78/Gesture/Gesture/Screens/BackgroundScreen.cs
+END
+GameplayScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/Games/!svn/ver/91/Gesture/Gesture/Screens/GameplayScreen.cs
+END
+SimonSaysGameScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/Games/!svn/ver/91/Gesture/Gesture/Screens/SimonSaysGameScreen.cs
+END
+OptionsMenuScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/Games/!svn/ver/74/Gesture/Gesture/Screens/OptionsMenuScreen.cs
+END
+PauseMenuScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/Games/!svn/ver/78/Gesture/Gesture/Screens/PauseMenuScreen.cs
+END
+MenuScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/Games/!svn/ver/78/Gesture/Gesture/Screens/MenuScreen.cs
+END
+GameOverScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/Games/!svn/ver/71/Gesture/Gesture/Screens/GameOverScreen.cs
+END
+SurvivalGameScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/Games/!svn/ver/91/Gesture/Gesture/Screens/SurvivalGameScreen.cs
+END
+MenuEntry.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/Games/!svn/ver/78/Gesture/Gesture/Screens/MenuEntry.cs
+END
+MainMenuScreen.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/Games/!svn/ver/91/Gesture/Gesture/Screens/MainMenuScreen.cs
+END
