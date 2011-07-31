@@ -1,39 +1,50 @@
 package com.findafountain;
 
-import java.util.Locale;
-
-import android.location.Address;
-
+import com.findafountain.ObjectPool.Poolable;
 import com.google.android.maps.GeoPoint;
 
-//Purpose:
-//	Represents a fountain object in the system. We use this class to represent a row in the
-// 	fountains database table to ease data passing between the system and the database.
-public class Fountain
+/**
+ * Represents a fountain object in the system. We use this class to represent a row in the
+ * fountains database table to ease data passing between the system and the database.
+ * @author Joel
+ *
+ */
+public class Fountain implements Poolable
 {
-	//Database Attributes (in order)
+	//Database Attributes
 	private int id;
 	private double longitude;
 	private double latitude;
-	private int status;
-	private int city_id;
-	
+	//private int status;
+	private String status;
 	
 	//Whether or not the fountain has been drawn as an overlay
 	//Note, this is not a DB attribute
-	private boolean isDrawn;
-	//The address (Street, City & State, Country) of the fountain
-//	private Address address;
+	private boolean isReleased;
+	
+	/**
+	 * A list of possible statuses for the fountain. 
+	 * We expect the values to mirror the server's possible fountain status values
+	 * This isn't ideal, as any change in that table of the server will result in 
+	 * a loss of the association we are establishing with this class.
+	 * However, we don't anticipate the status' ever changing.
+	 * @author Joel
+	 */
+	public final class Status
+	{
+		public static final String DRINKABLE = "Drinkable";
+		public static final String PENDING = "Pending";
+		public static final String BROKEN = "Broken";
+	}
 	
 	public Fountain()
 	{
 		id = 0;
 		longitude = 0;
 		latitude = 0;
-		status = 1;
-		city_id = 1;
-		isDrawn = false;
-		//address = new Address(Locale.getDefault());
+		status = "";
+		
+		isReleased = false;
 	}
 	
 	public int getId()
@@ -56,11 +67,22 @@ public class Fountain
 		this.longitude = longitude;
 	}
 
-	//Purpose: Returns the lat and long coords as a micro-degree Geopoint
+	/**
+	 * Returns the lat and long coords as a micro-degree Geopoint
+	 */
 	public GeoPoint getCoordinates()
 	{
 		GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int)(longitude * 1E6));
 		return point;
+	}
+	
+	/**
+	 * Returns the coordinates in LongLat format
+	 * @return A LongLat object with the coordinates
+	 */
+	public LongLat getCoordinatesLongLat()
+	{
+		return new LongLat(longitude, latitude);
 	}
 	
 	public double getLatitude()
@@ -73,56 +95,26 @@ public class Fountain
 		this.latitude = latitude;
 	}
 
-	public int getStatus()
+	public String getStatus()
 	{
 		return status;
 	}
 
-	public void setStatus(int status)
+	public void setStatus(String status)
 	{
 		this.status = status;
 	}
 
-	public int getCity_id()
+	@Override
+	public boolean isReleased()
 	{
-		return city_id;
+		return isReleased;
 	}
 
-	public void setCity_id(int city_id)
+	@Override
+	public void setReleased(boolean b)
 	{
-		this.city_id = city_id;
+		isReleased = b;
 	}
-
-	public boolean getIsDrawn()
-	{
-		return isDrawn;
-	}
-	
-	public void setIsDrawn(boolean isDrawn)
-	{
-		this.isDrawn = isDrawn;
-	}
-
-//	public void setAddress(Address address)
-//	{
-//		this.address = address;
-//	}
-//
-//	public Address getAddress()
-//	{
-//		return address;
-//	}
-//	
-//	//Purpose: Allows the direct setting of the street of the address attribute.
-//	public void setStreet(String street)
-//	{
-//		this.address.setAddressLine(0, street);
-//	}
-//	
-//	public String getStreet()
-//	{
-//		return this.address.getAddressLine(0);
-//	
-//	}
 
 }

@@ -1,51 +1,36 @@
 package com.findafountain;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.findafountain.MyActionBar.RefreshAction;
-import com.findafountain.RestClient.RequestMethod;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
-import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.AbstractAction;
-
-import android.app.ProgressDialog;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.LinearLayout;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-//Shows map with MapActivity
-//Handles screen touches with OnTouchListener
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.Overlay;
+
+import com.facebook.android.*;
+import com.facebook.android.Facebook.*;
+/**
+ * The main map activity of this application.
+ * @author Joel
+ */
 public class MainActivity extends MapActivity implements OnDoubleTapListener, OnGestureListener
 {
 	private static String TAG = "MainActivity";
@@ -58,26 +43,28 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 	private ZoomHandler zoomHandler;
 	//Handles the polling for panning/dragging changes
 	private PanHandler panHandler;
-	//Handles the messages coming from the PanHandler
-	private Handler panMessageHandler;
-	//Handles the messages coming from the action bar
-	private Handler actionbarMessageHandler;
-	//Handles the message coming from the zoom handler
-	private Handler zoomMessageHandler;
+	//Handles login balloon messages
+	private Handler loginHandler = null;
 	
-	//Whether or not the UI is drawing the fountains
-	//This will help prevent other threads from signaling another drawing
+	//Whether or not the UI is drawing the fountains via the async task
+	//This will help prevent another signaling for drawing
 	private boolean isDrawingFountains;
 	
-	//Create a drawable linked to the custom blue and red markers
-	private Drawable drinkableDrawable, brokenDrawable, pendingDrawable;
+	//The current drawable to be used for overlay items.
+	//Changes bassed on the desired fountain status to be drawn
+	private Drawable currentDrawable;
+	
 	//A customized list of drinkable/blue map overlays
-	private CustomItemizedOverlay drinkableItemizedOverlay, brokenItemizedOverlay, pendingItemizedOverlay;
+	//We have only a single overlay that gets added to as the user pans.
+	//In turn, we can keep already drawn overlays.
+	private CustomItemizedOverlay currentItemizedOverlay;
 	
 	//TODO: Create the DBAdapter instance in the Application subclass.
 	public DBAdapter dbAdapter;
-	//List of fountains retrieved from the Db
-	private ArrayList<Fountain> fountains;
+
+	//Used to determine the bounds of the viewing rectangle for lazy-loading
+	private LongLat topLeft, topRight, botLeft, botRight;
+	
 	//The activity's action bar.
 	//Note: This needs to be accessible within all subclasses.
 	private MyActionBar actionBar;
@@ -87,23 +74,14 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainactivity);
-        
-        //Init the class objects
+        	
+        //Init the class' objects
         Initialize();
-        
-        //Draw the user's current location
-		CreateMyLocation();
-		
-		//Load all existing fountains from the database
-        LoadAllFountains();
-
-        //Draw all existing fountain locations
-        DrawFountainLocations();
-       
+                
         //Simulate a clicking of the actionbar refresh button
         actionBar.new RefreshAction().performAction(mapView);
     }
-       
+    
 	@Override
 	protected void onPause()
 	{
@@ -119,59 +97,59 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 	@Override
 	protected void onResume()
 	{
-		super.onResume();
-		//Point to the user's current location and draw marker.
+		super.onResume();		
 		//When the application comes into the foreground, turn location tracking on
 		myLocationOverlay.enableMyLocation();
 		myLocationOverlay.enableCompass();
-		//Register a new polling handler
+		//Register the handlers
 		zoomHandler.postDelayed();
 		panHandler.postDelayed();
+		
+		//Draw the fountains after all objects are initialized.
+		//This draws markers in viewing range while the async task polls the server.
+		DrawFountainLocations();
 	}
 		
 	@Override
 	protected boolean isRouteDisplayed()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	//Purpose: Sets up the mapView, mapController, and other objects
+	{ return false; }
+		
+	/**
+	 * Sets up the mapView, mapController, and other objects.
+	 */
     private void Initialize()
     {    
         //Create an instance of our custom map view
         mapView = (MyMapView) findViewById(R.id.mymapview);
-        mapView.setBuiltInZoomControls(true);		
+        mapView.setBuiltInZoomControls(true);			
 		
 		//Set up the map controller
-		MapController mapController = mapView.getController();
-		mapController.setZoom(16);
+		mapView.getController().setZoom(17);
+		
+		//Draw the user's current location
+		CreateMyLocation();
 		
 		//Set the drawing flag
 		isDrawingFountains = false;
 		
-		//Handles all incoming messages from the zoom-level polling handler
-		zoomMessageHandler = new Handler()
+		//Create the handler that maintains the changing zoom level overlay renderings
+		zoomHandler = new ZoomHandler(mapView, new Handler()
 		{
 			public void handleMessage(Message msg) 
 			{
 				super.handleMessage(msg);
 				switch (msg.what) 
 				{
-					//The zoom level changed
-					case 1:
-						if(!isDrawingFountains) DrawFountainLocations();
-						Log.d(TAG, "zoomMessageHandler: Zoom Message Handled!");
+					//If we zoomed out, then redraw the fountains. Zooming in just means we're seeing what we've already drawn
+					case ZoomHandler.Actions.ZOOM_OUT:
+						DrawFountainLocations();		
+						Log.d(TAG, "zoomMessageHandler: Zoom Out Triggered Redraw!");
 						break;
 				}
 			}
-		};
+		});
 		
-		//Create the handler that maintains the changing zoom level overlay renderings
-		zoomHandler = new ZoomHandler(mapView, zoomMessageHandler);
-		
-		//Handles all incoming messages from the pan polling handler
-		panMessageHandler = new Handler()
+		panHandler = new PanHandler(mapView, new Handler()
 		{
 			public void handleMessage(Message msg) 
 			{
@@ -180,17 +158,15 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 				{
 					//The pan finished
 					case 1:
-						if(!isDrawingFountains) DrawFountainLocations();
+						DrawFountainLocations();
 						Log.d(TAG, "panMessageHandler: PanHandling Complete!");
 						break;
 				}
 			}
-		};
-		
-		panHandler = new PanHandler(mapView, panMessageHandler);
+		});
 
 		//Handles all incoming messages from the action bar
-		actionbarMessageHandler = new Handler()
+		Handler actionbarMessageHandler = new Handler()
 		{
 			public void handleMessage(Message msg) 
 			{
@@ -199,24 +175,64 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 				{
 					//Refresh
 					case MyActionBar.Actions.REFRESH:
-						if(!isDrawingFountains) DrawFountainLocations();
+						DrawFountainLocations();
+						//Show a toast indicating the number of fountains processed.
+						//String output = msg.arg1 + " Fountains Processed";
+						//Toast.makeText(MainActivity.this, output, Toast.LENGTH_SHORT).show();
 						Log.d(TAG, "actionbarMessageHandler: Refresh Message Handled!");
 						break;
 					//Add 
 					case MyActionBar.Actions.ADD:
+//						if(loginHandler == null)
+//							loginHandler = new Handler(){
+//								public void handleMessage(Message msg){
+//									super.handleMessage(msg);
+//									//If the OK button was pressed for logging in
+//									if(msg.what == 1)
+//									{
+//										Facebook fb = new Facebook("161725997225791");
+//										//Create an intent to navigate to user authorization
+//										startActivityForResult(new Intent(MainActivity.this, FacebookAuthorizationActivity.class), 1);
+//										//TODO: implement Auth success
+//										//If the user logs in
+//										//Ask to turn on GPS
+//										//Place a fountain/marker at their location
+//										//Present with a submit button
+//										Log.d(TAG, "ActionBarHandler: Add - User Authentication Success");
+//									}
+//								}
+//							};
+//						
+//						//Create a new LoginBalloonOverlayView at the user's location overlay
+//						LoginBalloonOverlayView loginBalloon = LoginBalloonOverlayView.getInstance(MainActivity.this, 0, loginHandler);
+//								
+//						//Add LoginBalloon formatting information and location
+//						loginBalloon.setVisibility(View.VISIBLE);
+//		            	//Set layout parameters including where to show the balloon
+//		                MapView.LayoutParams params = new MapView.LayoutParams(
+//	    					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, myLocationOverlay.getMyLocation(),
+//	    					MapView.LayoutParams.BOTTOM_CENTER);
+//		                
+//		                //loginBalloon.setLayoutParams(params);
+//		    			params.mode = MapView.LayoutParams.MODE_MAP;
+//		    			//Remove the balloon from the map view to avoid duplicates
+//		    			mapView.removeView(loginBalloon);
+//		    			mapView.addView(loginBalloon, params);
+//		    			//Zoom to the location of the balloon
+//		                actionBar.new MyLocationAction().performAction(mapView);
+//						
+//		                //Bring up the keyboard and set focus on the 
+//		                InputMethodManager inputMgr = (InputMethodManager)getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+//		                inputMgr.toggleSoftInput(0, 0);
+		                
+						Toast.makeText(MainActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
 						Log.d(TAG, "actionbarMessageHandler: Add Message Handled!");
 						break;
 					//My Location
 					case MyActionBar.Actions.MY_LOCATION:
-						Toast.makeText(MainActivity.this, "Returning to Your Location", Toast.LENGTH_SHORT).show();
 						//Animate to the user's last known location
 						mapView.getController().animateTo(myLocationOverlay.getMyLocation());
 						Log.d(TAG, "actionbarMessageHandler: MyLocation message handled!");
-						break;
-					//Filter
-					case MyActionBar.Actions.FILTER:
-						Toast.makeText(MainActivity.this, "Filter Soon!", Toast.LENGTH_SHORT).show();
-						Log.d(TAG, "actionbarMessageHandler: Filter Message Handled!");
 						break;
 				}
 			}
@@ -224,33 +240,38 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 		
 		//Initialize the database adapter for all database operations
 		dbAdapter = new DBAdapter(this);
-		if(dbAdapter != null)
+		if(dbAdapter == null)
 		{
-			Log.d(TAG, "Initialize: dbAdapter Created.");
-			//Create the action bar
-			actionBar = (MyActionBar) findViewById(R.id.myactionbar);
-			//actionBar = new MyActionBar(this, dbAdapter, actionbarMessageHandler);
-			actionBar.Initialize(dbAdapter, actionbarMessageHandler);
-			
-			if(actionBar != null)
-				Log.d(TAG, "Initialize: Actionbar Created.");
+			Log.e(TAG, "Initialize: dbAdapter not created!");
+			return;
 		}
-
-		//Create the drawable images used in the map overlays
-		drinkableDrawable = (Drawable) this.getResources().getDrawable(R.drawable.drinkable);
-		brokenDrawable = (Drawable) this.getResources().getDrawable(R.drawable.broken);
-		pendingDrawable = (Drawable) this.getResources().getDrawable(R.drawable.pending);
 		
-		//A customized list of drinkable/blue map overlays
-		drinkableItemizedOverlay = new CustomItemizedOverlay(drinkableDrawable, mapView);
-		brokenItemizedOverlay = new CustomItemizedOverlay(brokenDrawable, mapView);
-		pendingItemizedOverlay = new CustomItemizedOverlay(pendingDrawable, mapView);
+		Log.d(TAG, "Initialize: dbAdapter Created.");
+		
+		//Create the action bar
+		actionBar = (MyActionBar) findViewById(R.id.myactionbar);
+		actionBar.Initialize(dbAdapter, actionbarMessageHandler);
+		Log.d(TAG, "Initialize: Actionbar Created.");
+					
+		//Default drawable is drinkable. Don't delete as Drawing uses this too.
+		currentDrawable = (Drawable) this.getResources().getDrawable(R.drawable.drinkable);
+		Log.d(TAG, "Initialize: Current Drawable Created.");
+		currentItemizedOverlay = new CustomItemizedOverlay(currentDrawable, mapView);		
+		Log.d(TAG, "Initialize: CustomItemizedOverlay Created.");
+		
+		//Init the viewing bounds
+		topLeft = new LongLat();
+		topRight = new LongLat();
+		botLeft = new LongLat();
+		botRight = new LongLat();
 		
 		Log.d(TAG, "Initialize: Initialization Complete!");
     }//end Initialize()
     
-    //Purpose: Sets up the MyLocationOverlay object that maintains the user's
-    //	current location and renders both a marker and approximation radius.
+    /**
+     * Purpose: Sets up the MyLocationOverlay object that maintains the user's
+     * current location and renders both a marker and approximation radius.
+     */
     private void CreateMyLocation()
     {
     	//Create the My Location overlay
@@ -260,8 +281,7 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.runOnFirstFix(new Runnable() 
         {
-        	//Purpose: Handles what occurs when the location overlay object
-        	//	is first created!
+        	//Purpose: Handles what occurs when the location overlay object	is first created!
             public void run() 
             {
             	//Grab the user's best known location and move the map to it.
@@ -271,114 +291,128 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
         
         Log.d(TAG, "CreateMyLocation: MyLocationOverlay Created!");
     }
-    
-    //Purpose: Loads all fountains from the database into the list of fountain objects.
-    public void LoadAllFountains()
-    {
-    	this.fountains = dbAdapter.SelectFountains();
-    	Log.d(TAG, "LoadAllFountains: " + fountains.size() + " existing fountains loaded from DB.");
+        
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mapmenu, menu);
+        return true;
     }
-       
-    //Purpose: Creates map markers/overlays for each fountain location based on the user's current location.
-    //Precondition: Fountain list must be populated with fountains to be drawn.
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) 
+        {
+            case R.id.menu_add: 
+            	//Trigger action bar add press
+            	actionBar.new AddFountainAction().performAction(mapView);
+                return true;
+            case R.id.menu_refresh:
+            	//Trigger action bar refresh press
+            	actionBar.new RefreshAction().performAction(mapView);
+                return true; 
+            case R.id.menu_about:
+            	//Create about balloon with author info
+            	AboutBalloonOverlayView aboutBalloon = AboutBalloonOverlayView.getInstance(this, 0);
+            	//Make the balloon visible since it might have been closed
+            	aboutBalloon.setVisibility(View.VISIBLE);
+            	//Set layout parameters including where to show the balloon
+                MapView.LayoutParams params = new MapView.LayoutParams(
+    					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, myLocationOverlay.getMyLocation(),
+    					MapView.LayoutParams.BOTTOM_CENTER);
+                aboutBalloon.setLayoutParams(params);
+    			params.mode = MapView.LayoutParams.MODE_MAP;
+    			//Remove the balloon from the map view to avoid duplicates
+    			mapView.removeView(aboutBalloon);
+    			mapView.addView(aboutBalloon, params);
+    			//Zoom to the location of the balloon
+                actionBar.new MyLocationAction().performAction(mapView);
+            	return true;
+        } 
+        return false;
+    }
+
+    
+    /**
+     * Lazy-loads fountain locations within an enlarged viewing range, creating markers,
+     * and adding them to a custom fountain itemized (list of markers) overlay.
+     */
     public void DrawFountainLocations()
-    {
-    	//Restrict other simultaneous draw calls
-    	isDrawingFountains = true;
-    	
-    	//A list of overlays for the current map
-		List<Overlay> mapOverlays = mapView.getOverlays();
-
-		//Bounding box of our current view
-		//Used to restrict rendering of the overlays
-		Rect rect = new Rect(0,0,mapView.getWidth(), mapView.getHeight());
-		
-		//For each loaded fountain
-    	for(int i = 0; i < fountains.size(); i++)
-    	{
-    		//Cache the current fountain
-          	Fountain f = fountains.get(i);
-          
-          	if(f != null)
-          	{
-	          	//Convert the fountains geolocation data into microdegrees
-	    		GeoPoint point = f.getCoordinates();
-	    		Point out = new Point();
-	    		//Get the pixel coordinates of our fountain's location
-	    		mapView.getProjection().toPixels(point, out);
-	    		//If the view's bounding rectangle contains the current fountain
-	    		// and the fountain hasn't been drawn
-	    		if(rect.contains(out.x, out.y) && !f.getIsDrawn())
-	    		{
-	    			//Set the fountain as drawn to prevent it from being redrawn
-	    			f.setIsDrawn(true);
-	    			
-		    		//Create an overlay item for the current fountain point
-	    			//TODO: Change the text that gets displayed in the balloon overlay
-	    			//Get address as title
-	     			//Show details:
-	    			//	Rating
-	    			//	Show
-	    			try
-	    			{	    			
-			    		OverlayItem overlayitem = new OverlayItem(point, "Hello", "I'm fountain " + i + "!");
-			    		//mapView.getOverlays().
-			    		//Add the overlay to the appropriate overlay
-			    		if(f.getStatus() == 1)
-			    			drinkableItemizedOverlay.addOverlay(overlayitem);	
-			    		else if(f.getStatus() == 0)
-			    			brokenItemizedOverlay.addOverlay(overlayitem);
-			    		else if(f.getStatus() == 2)
-			    			pendingItemizedOverlay.addOverlay(overlayitem);
-	    			}
-	    			catch(Exception e)
-	    			{
-	    				Log.e(TAG, "DrawFountainLocations: " + e);
-	    			}
-	    		}//end if
-          	}//end if
-          	else
-          		Log.e(TAG, "DrawFountainLocations: Fountain was equal to null!");
-    	}    	
-    		
-    	//Add the list of overlays to the maps's overlay list
-    	if(drinkableItemizedOverlay.size() > 0)
-    	{
-    		mapOverlays.remove(drinkableItemizedOverlay);
-    		mapOverlays.add(drinkableItemizedOverlay);
-    	}
-    	if(brokenItemizedOverlay.size() > 0)
-    	{	
-    		mapOverlays.remove(brokenItemizedOverlay);
-    		mapOverlays.add(brokenItemizedOverlay);
-    	}
-    	if(pendingItemizedOverlay.size() > 0)
-    	{	
-    		mapOverlays.remove(pendingItemizedOverlay);
-    		mapOverlays.add(pendingItemizedOverlay);
-    	}
-    	
-    	//Force the redrawing of the mapview to avoid artifacts
-    	mapView.postInvalidate();
-    	Log.d(TAG, "Map View Invalidated!");
-    	//Reset the flag to allow for another draw call
-    	isDrawingFountains = false;
-    	Log.d(TAG, drinkableItemizedOverlay.size() + " Drinkable Fountain Overlays Drawn!");
-    	Log.d(TAG, brokenItemizedOverlay.size() + " Broken Fountain Overlays Drawn!");
-    	Log.d(TAG, pendingItemizedOverlay.size() + " Pending Fountain Overlays Drawn!");
-    }
-
-    //OnDoubleTapListener's Methods
-    
-    //Purpose: On a user's double tap, zoom in the map
+	{
+	  	//If either or the mapview's dimensions is zero, don't draw anything. 
+		int mapHeight = mapView.getHeight(), mapWidth = mapView.getWidth();
+    	if(mapHeight == 0 && mapWidth == 0) return;
+			
+	  	//If we're already drawing, then leave! Restricts other simultaneous draw calls.
+	  	if(isDrawingFountains) return;
+	  	else isDrawingFountains = true;
+	  	try
+	  	{
+		  	//A list of overlays for the current map
+			List<Overlay> mapOverlays = mapView.getOverlays();
+			//Remove the current itemized overlay from the mapview since we'll repopulate it.
+			mapOverlays.remove(currentItemizedOverlay);
+			
+			//We impose a cache of 75 overlay items before clearing and redrawing
+			//The cache allows us to prevent redrawing existing fountains; however,
+			//	since we can't smoothly show hundreds of overlays, we limit the number
+			//	of reused overlay items to 75
+			if(currentItemizedOverlay.size() > 75)
+				//Clear the list of managed overlay items
+				currentItemizedOverlay.clear();
+			
+			//TODO: Implement scaling the viewing rectangle to pull more fountains and avoid popping.
+			//Pixel amounts for padding the edges of the viewing rectangle.
+			int sw = mapWidth / 2;	//Scale width
+			int sh = mapHeight / 2;	//Scale height
+			
+			topLeft.initFromGeoPoint(mapView.getProjection().fromPixels(-sw, -sh));
+			topRight.initFromGeoPoint(mapView.getProjection().fromPixels(mapWidth + sw, -sh));
+			botLeft.initFromGeoPoint(mapView.getProjection().fromPixels(-sw, mapHeight + sh));
+			botRight.initFromGeoPoint(mapView.getProjection().fromPixels(mapWidth + sw, mapHeight + sh));
+			
+			//Load the fountains within viewing range
+			ArrayList<Fountain> fountains = dbAdapter.SelectFountainsInRange(topLeft, topRight, botRight, botLeft);
+			int numFountains = fountains.size();
+			//During the fresh install, there is no data in the database, yielding 0 results
+			if(numFountains == 0) return;		
+			
+			//For every fountain in range
+			for(int i = 0; i < numFountains; i++)
+			{
+				//Cache the current fountain
+				Fountain f = fountains.get(i);
+				//Create a custom overlay item at the fountain's location with its model data
+				FountainOverlayItem overlayitem = new FountainOverlayItem(f.getCoordinates(), f);
+	    		//Set the marker drawable to be drawn for the overlay item
+	    		overlayitem.setMarker(currentDrawable);
+	    		currentItemizedOverlay.addOverlay(overlayitem);
+	    		//Release the fountain object
+				dbAdapter.pool.release(f);
+			}
+			
+			//Add the newly populated overlay items
+	    	mapOverlays.add(currentItemizedOverlay);
+	    	//Force the redrawing of the mapview to avoid artifacts
+	    	mapView.postInvalidate();
+	    	
+	    	//Reset the flag to allow for another draw call
+	    	isDrawingFountains = false;
+	    	
+	    	Log.d(TAG, "DrawFountainLocations: " + currentItemizedOverlay.size() + " fountains drawn!");
+	  	}
+	  	catch(Exception e)
+	  	{
+	  		Log.e(TAG, "DrawFountainLocations: " + e);
+	  	}
+  	}
+  
+    /**
+     * On a user's double tap, trigger a zoom in action
+     */
 	@Override
 	public boolean onDoubleTap(MotionEvent e)
 	{
-		//Get the point of the double tap
-		//GeoPoint p = mapView.getProjection().fromPixels((int)e.getX(), (int)e.getY());
-		//Animate to the double tapped location
-		//mapView.getController().animateTo(p);
-		//On a double tap, zoom the 
 		mapView.getController().zoomIn();
 		return true;
 	}

@@ -8,6 +8,21 @@
 package com.findafountain;
 
 public final class R {
+    public static final class anim {
+        public static final int grow_from_bottom=0x7f040000;
+        public static final int grow_from_bottomleft_to_topright=0x7f040001;
+        public static final int grow_from_bottomright_to_topleft=0x7f040002;
+        public static final int grow_from_top=0x7f040003;
+        public static final int grow_from_topleft_to_bottomright=0x7f040004;
+        public static final int grow_from_topright_to_bottomleft=0x7f040005;
+        public static final int rail=0x7f040006;
+        public static final int shrink_from_bottom=0x7f040007;
+        public static final int shrink_from_bottomleft_to_topright=0x7f040008;
+        public static final int shrink_from_bottomright_to_topleft=0x7f040009;
+        public static final int shrink_from_top=0x7f04000a;
+        public static final int shrink_from_topleft_to_bottomright=0x7f04000b;
+        public static final int shrink_from_topright_to_bottomleft=0x7f04000c;
+    }
     public static final class attr {
         /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
@@ -19,109 +34,197 @@ containing a value of this type.
         public static final int title=0x7f010000;
     }
     public static final class color {
-        public static final int actionbar_background_end=0x7f050003;
-        public static final int actionbar_background_item_pressed_end=0x7f050005;
-        public static final int actionbar_background_item_pressed_start=0x7f050004;
-        public static final int actionbar_background_start=0x7f050002;
-        public static final int actionbar_separator=0x7f050000;
-        public static final int actionbar_title=0x7f050001;
-        public static final int black=0x7f050006;
-        public static final int off_white=0x7f050007;
-        public static final int white=0x7f050008;
+        public static final int actionbar_background_end=0x7f070003;
+        public static final int actionbar_background_item_pressed_end=0x7f070005;
+        public static final int actionbar_background_item_pressed_start=0x7f070004;
+        public static final int actionbar_background_start=0x7f070002;
+        public static final int actionbar_separator=0x7f070000;
+        public static final int actionbar_title=0x7f070001;
+        public static final int black=0x7f070007;
+        public static final int facebook_blue=0x7f07000a;
+        public static final int fountain_overlay_separator=0x7f070006;
+        public static final int off_white=0x7f070008;
+        public static final int white=0x7f070009;
     }
     public static final class dimen {
-        public static final int actionbar_height=0x7f060000;
-        public static final int actionbar_item_height=0x7f060001;
-        public static final int actionbar_item_width=0x7f060002;
+        public static final int actionbar_height=0x7f080000;
+        public static final int actionbar_item_height=0x7f080001;
+        public static final int actionbar_item_width=0x7f080002;
     }
     public static final class drawable {
-        public static final int actionbar_back_indicator=0x7f020000;
-        public static final int actionbar_background=0x7f020001;
-        public static final int actionbar_btn=0x7f020002;
-        public static final int actionbar_btn_normal=0x7f020003;
-        public static final int actionbar_btn_pressed=0x7f020004;
-        public static final int balloon_overlay_bg_selector=0x7f020005;
-        public static final int balloon_overlay_close=0x7f020006;
-        public static final int balloon_overlay_focused=0x7f020007;
-        public static final int balloon_overlay_unfocused=0x7f020008;
-        public static final int broken=0x7f020009;
-        public static final int drinkable=0x7f02000a;
-        public static final int droplet_off=0x7f02000b;
-        public static final int droplet_off_small=0x7f02000c;
-        public static final int droplet_on=0x7f02000d;
-        public static final int droplet_on_small=0x7f02000e;
-        public static final int fountain_ratingbar_empty=0x7f02000f;
-        public static final int fountain_ratingbar_filled=0x7f020010;
-        public static final int fountain_ratingbar_small_empty=0x7f020011;
-        public static final int fountain_ratingbar_small_filled=0x7f020012;
-        public static final int fountain_ratingbaricon=0x7f020013;
-        public static final int ic_menu_filter=0x7f020014;
-        public static final int icon=0x7f020015;
-        public static final int menu_add=0x7f020016;
-        public static final int menu_filter=0x7f020017;
-        public static final int menu_mylocation=0x7f020018;
-        public static final int menu_refresh=0x7f020019;
-        public static final int pending=0x7f02001a;
+        public static final int action_item_selected=0x7f020000;
+        public static final int actionbar_back_indicator=0x7f020001;
+        public static final int actionbar_background=0x7f020002;
+        public static final int actionbar_btn=0x7f020003;
+        public static final int actionbar_btn_normal=0x7f020004;
+        public static final int actionbar_btn_pressed=0x7f020005;
+        public static final int actionbarlogo=0x7f020006;
+        public static final int balloon_overlay_bg_selector=0x7f020007;
+        public static final int balloon_overlay_close=0x7f020008;
+        public static final int balloon_overlay_focused=0x7f020009;
+        public static final int balloon_overlay_unfocused=0x7f02000a;
+        public static final int balloon_overlay_unfocused_trans=0x7f02000b;
+        public static final int broken=0x7f02000c;
+        public static final int budget=0x7f02000d;
+        public static final int chart=0x7f02000e;
+        public static final int dashboard=0x7f02000f;
+        public static final int drinkable=0x7f020010;
+        public static final int droplet_action=0x7f020011;
+        public static final int droplet_off=0x7f020012;
+        public static final int droplet_off_small=0x7f020013;
+        public static final int droplet_on=0x7f020014;
+        public static final int droplet_on_small=0x7f020015;
+        public static final int facebook75=0x7f020016;
+        public static final int facebook_balloon_overlay_unfocused=0x7f020017;
+        public static final int facebook_icon=0x7f020018;
+        public static final int facebook_logo=0x7f020019;
+        public static final int fountain_ratingbar_empty=0x7f02001a;
+        public static final int fountain_ratingbar_filled=0x7f02001b;
+        public static final int fountain_ratingbar_small_empty=0x7f02001c;
+        public static final int fountain_ratingbar_small_filled=0x7f02001d;
+        public static final int fountain_ratingbaricon=0x7f02001e;
+        public static final int ic_menu_filter=0x7f02001f;
+        public static final int ic_menu_refresh=0x7f020020;
+        public static final int icon=0x7f020021;
+        public static final int menu_add=0x7f020022;
+        public static final int menu_filter=0x7f020023;
+        public static final int menu_mylocation=0x7f020024;
+        public static final int menu_refresh=0x7f020025;
+        public static final int newlogo2=0x7f020026;
+        public static final int newlogo3=0x7f020027;
+        public static final int pending=0x7f020028;
+        public static final int popup=0x7f020029;
+        public static final int prlogo=0x7f02002a;
+        public static final int production=0x7f02002b;
+        public static final int quickcontact_arrow_down=0x7f02002c;
+        public static final int quickcontact_arrow_up=0x7f02002d;
+        public static final int quickcontact_bottom_frame=0x7f02002e;
+        public static final int quickcontact_disambig_bottom_bg=0x7f02002f;
+        public static final int quickcontact_disambig_divider=0x7f020030;
+        public static final int quickcontact_drop_shadow=0x7f020031;
+        public static final int quickcontact_photo_frame=0x7f020032;
+        public static final int quickcontact_slider_background=0x7f020033;
+        public static final int quickcontact_slider_btn=0x7f020034;
+        public static final int quickcontact_slider_btn_normal=0x7f020035;
+        public static final int quickcontact_slider_btn_on=0x7f020036;
+        public static final int quickcontact_slider_btn_pressed=0x7f020037;
+        public static final int quickcontact_slider_btn_selected=0x7f020038;
+        public static final int quickcontact_slider_grip_left=0x7f020039;
+        public static final int quickcontact_slider_grip_right=0x7f02003a;
+        public static final int quickcontact_top_frame=0x7f02003b;
+        public static final int report=0x7f02003c;
+        public static final int sym_action_add=0x7f02003d;
+        public static final int sym_action_map=0x7f02003e;
+        public static final int users=0x7f02003f;
     }
     public static final class id {
-        public static final int actionbar_actions=0x7f080006;
-        public static final int actionbar_home=0x7f080001;
-        public static final int actionbar_home_bg=0x7f080003;
-        public static final int actionbar_home_btn=0x7f080004;
-        public static final int actionbar_home_is_back=0x7f080005;
-        public static final int actionbar_home_logo=0x7f080002;
-        public static final int actionbar_item=0x7f080009;
-        public static final int actionbar_progress=0x7f080007;
-        public static final int actionbar_title=0x7f080008;
-        public static final int balloon_inner_layout=0x7f08000b;
-        public static final int balloon_item_snippet=0x7f08000d;
-        public static final int balloon_item_title=0x7f08000c;
-        public static final int balloon_main_layout=0x7f08000a;
-        public static final int close_img_button=0x7f08000e;
-        public static final int fountain_park_name=0x7f08000f;
-        public static final int fountain_park_rating_label=0x7f080010;
-        public static final int fountain_ratingbar=0x7f080011;
-        public static final int fountain_status=0x7f080013;
-        public static final int fountain_status_label=0x7f080012;
-        public static final int login_Button=0x7f080016;
-        public static final int login_password=0x7f080015;
-        public static final int login_username=0x7f080014;
-        public static final int mainlayout=0x7f080018;
-        public static final int myactionbar=0x7f080019;
-        public static final int mymapview=0x7f08001a;
-        public static final int register_Button=0x7f080017;
-        public static final int screen=0x7f080000;
+        public static final int about_author=0x7f0a0002;
+        public static final int about_email=0x7f0a0003;
+        public static final int about_message=0x7f0a0005;
+        public static final int about_website=0x7f0a0004;
+        public static final int actionbar_actions=0x7f0a000f;
+        public static final int actionbar_home=0x7f0a000a;
+        public static final int actionbar_home_bg=0x7f0a000c;
+        public static final int actionbar_home_btn=0x7f0a000d;
+        public static final int actionbar_home_is_back=0x7f0a000e;
+        public static final int actionbar_home_logo=0x7f0a000b;
+        public static final int actionbar_item=0x7f0a0012;
+        public static final int actionbar_progress=0x7f0a0010;
+        public static final int actionbar_title=0x7f0a0011;
+        public static final int arrow_down=0x7f0a0022;
+        public static final int arrow_up=0x7f0a001e;
+        public static final int balloon_inner_layout=0x7f0a0001;
+        public static final int balloon_main_layout=0x7f0a0000;
+        public static final int btn1=0x7f0a0018;
+        public static final int btn2=0x7f0a0019;
+        public static final int close_img_button=0x7f0a0006;
+        public static final int facebook_logo=0x7f0a0013;
+        public static final int footer=0x7f0a0021;
+        public static final int fountain_report_button=0x7f0a0023;
+        public static final int header2=0x7f0a001d;
+        public static final int icon=0x7f0a0007;
+        public static final int login_OK_Button=0x7f0a0016;
+        public static final int login_cancel_Button=0x7f0a0017;
+        public static final int login_password=0x7f0a0015;
+        public static final int login_username=0x7f0a0014;
+        public static final int mainlayout=0x7f0a001a;
+        public static final int menu_about=0x7f0a0026;
+        public static final int menu_add=0x7f0a0024;
+        public static final int menu_refresh=0x7f0a0025;
+        public static final int myactionbar=0x7f0a001b;
+        public static final int mymapview=0x7f0a001c;
+        public static final int screen=0x7f0a0009;
+        public static final int scroll=0x7f0a001f;
+        public static final int title=0x7f0a0008;
+        public static final int tracks=0x7f0a0020;
     }
     public static final class layout {
-        public static final int actionbar=0x7f030000;
-        public static final int actionbar_item=0x7f030001;
-        public static final int balloon_overlay=0x7f030002;
-        public static final int fountainballoon=0x7f030003;
+        public static final int aboutballoon=0x7f030000;
+        public static final int action_item=0x7f030001;
+        public static final int actionbar=0x7f030002;
+        public static final int actionbar_item=0x7f030003;
         public static final int login=0x7f030004;
-        public static final int mainactivity=0x7f030005;
+        public static final int main=0x7f030005;
+        public static final int mainactivity=0x7f030006;
+        public static final int quickaction=0x7f030007;
+        public static final int simplefountainballoon=0x7f030008;
+    }
+    public static final class menu {
+        public static final int mapmenu=0x7f090000;
     }
     public static final class string {
-        public static final int actionbar_activity_not_found=0x7f040002;
-        public static final int app_name=0x7f040000;
+        /**  About 
+         */
+        public static final int about_author_name=0x7f050014;
+        public static final int about_email=0x7f050015;
+        public static final int about_message=0x7f050017;
+        public static final int about_website=0x7f050016;
+        public static final int actionbar_activity_not_found=0x7f050002;
+        public static final int app_name=0x7f050000;
+        public static final int app_name_short=0x7f050003;
+        public static final int cancel=0x7f05000c;
+        public static final int confirmation=0x7f05000b;
+        public static final int fountain_flag=0x7f050010;
         /**  Fountain Balloon 
          */
-        public static final int fountain_rating_label=0x7f040007;
-        public static final int fountain_status_label=0x7f040008;
-        public static final int hello=0x7f040001;
+        public static final int fountain_rating_label=0x7f05000d;
+        public static final int fountain_report=0x7f05000f;
+        public static final int fountain_status_label=0x7f05000e;
+        public static final int hello=0x7f050001;
         /**  Login 
          */
-        public static final int login_activity_title=0x7f040003;
-        public static final int login_password=0x7f040005;
-        public static final int login_username=0x7f040004;
-        public static final int login_welcome=0x7f040006;
+        public static final int login_activity_title=0x7f050004;
+        public static final int login_facebook_text=0x7f05000a;
+        public static final int login_hint_password=0x7f050009;
+        public static final int login_hint_username=0x7f050008;
+        public static final int login_password=0x7f050006;
+        public static final int login_username=0x7f050005;
+        public static final int login_welcome=0x7f050007;
+        public static final int menu_about_text=0x7f050013;
+        /**  Menu Options 
+         */
+        public static final int menu_add_text=0x7f050011;
+        public static final int menu_refresh_text=0x7f050012;
     }
     public static final class style {
-        public static final int ActionBar=0x7f070000;
-        public static final int ActionBarHomeItem=0x7f070002;
-        public static final int ActionBarHomeLogo=0x7f070003;
-        public static final int ActionBarItem=0x7f070001;
-        public static final int ActionBarProgressBar=0x7f070004;
-        public static final int FountainRatingBar=0x7f070005;
+        public static final int ActionBar=0x7f060009;
+        public static final int ActionBarHomeItem=0x7f06000b;
+        public static final int ActionBarHomeLogo=0x7f06000c;
+        public static final int ActionBarItem=0x7f06000a;
+        public static final int ActionBarProgressBar=0x7f06000d;
+        public static final int Animations=0x7f060000;
+        /**  PopDownMenu 
+         */
+        public static final int Animations_PopDownMenu=0x7f060001;
+        public static final int Animations_PopDownMenu_Center=0x7f060004;
+        public static final int Animations_PopDownMenu_Left=0x7f060002;
+        public static final int Animations_PopDownMenu_Right=0x7f060003;
+        /**  PopUpMenu 
+         */
+        public static final int Animations_PopUpMenu=0x7f060005;
+        public static final int Animations_PopUpMenu_Center=0x7f060008;
+        public static final int Animations_PopUpMenu_Left=0x7f060006;
+        public static final int Animations_PopUpMenu_Right=0x7f060007;
     }
     public static final class styleable {
         /** Attributes that can be used with a ActionBar.

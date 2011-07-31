@@ -1,119 +1,97 @@
 package com.findafountain;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.Collection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
-import com.findafountain.RestClient.RequestMethod;
-
-import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.findafountain.RestClient.RequestMethod;
+
+/**
+ * Represents an async thread that polls a remote server for fountain information,
+ * converts the server's JSON response into usable fountain objects, calls for the
+ * local storage of the fountains, and notifies the caller about its task completion.
+ * @author Joel
+ */
 public class GetFountainsAsyncTask extends AsyncTask<String, Integer, Integer>
 {
 	private static final String TAG = "GetFountainsAsyncTask";
-	//Live server URL
+	
+	//Live server URL.
 	private static final String SERVER_URL = "http://mrjoelkemp.com/findafountain/";
 	//Development server URL at home
-	//private static final String SERVER_URL = "http://192.168.1.101/findafountain/";
+	//private static final String SERVER_URL = "http://74.73.72.2/findafountain/";
 	//Development server at Hunter College
-	//private static final String SERVER_URL = "http://146.95.37.87/findafountain/";
+	//private static final String SERVER_URL = "http://146.95.37.88/findafountain/";
 	
-	//Whether or not the async task has finished its rest functions
-	//We use this to prevent multiple tasks from being started
-	private boolean asyncTaskFinished = true;
+	//UI thread data structures to hold the fountain objects for fast drawing
+	//private FountainLookupStructures lookupStructures;
+	
 	//Pointer to the database adapter for db operations.
 	private DBAdapter dbAdapter;
-	//Pointer to the calling activity
-	private Context context;
 	//The handler that can receive this thread's messages
 	private Handler messageHandler;
 	
-	//Used to reverse geocode the addresses based on Longitude and Latitude coords.
-	private Geocoder geocoder;
-	
-	public GetFountainsAsyncTask(Context context, DBAdapter db, Handler messageHandler) 
+	public GetFountainsAsyncTask(DBAdapter db, Handler messageHandler) 
 	{
 		dbAdapter = db;
-		this.context = context;
 		this.messageHandler = messageHandler;
-		
-		geocoder = new Geocoder(context, Locale.getDefault());
-		
 		Log.d(TAG, "Async Task Intialized.");
 	}
 
-	//Purpose: The tasks performed in the background thread.
+	/**
+	 * Purpose: The tasks performed in the background thread.
+	 */
 	@Override
 	protected Integer doInBackground(String... url)
-	{
-		ArrayList<Fountain> readFountains;
-		int numFountains = 0;
+	{		
+		int numFountainsParsed = 0;
 		try
 		{		
-			//We are not done with our task.
-			setAsyncTaskFinished(false);
-			
-			//Set up the server url
-			String absoluteURL = SERVER_URL + url[0];
 			//Poll the server and grab the JSON response
-			String response = GetFountainsJSON(absoluteURL);
-			//The the response is valid
+			String response = GetFountainsJSON(SERVER_URL + url[0]);
+			
+			//The there was some response
+			//TODO: Check to make sure it's actually JSON. Server returns bad requests when something is wrong!
 			if(response != null)
 			{
-				//Convert the returned result into a JSON array
-				readFountains = JSONtoFountain(response);
-					
-				//Store the Fountain Objects into the Database
-				dbAdapter.AddOrUpdateFountains(readFountains);
-					
-				Log.d(TAG, "onPostExecute: " + readFountains.size() + " fountains sent to the DB.");
-				//Set the number of read fountains
-				numFountains = readFountains.size();
+				//Convert the response to fountain objects and store in the database.
+				numFountainsParsed = JSONtoFountain(response);
+				Log.d(TAG, "onPostExecute: " + numFountainsParsed + " fountains sent to the DB.");
 			}
 		}
 		catch (Exception e)
 		{
 			Log.e(TAG, "doInBackground: " + e);
 		}
-		
-		return numFountains;
+		//Return the number of processed fountains to onPostExecute
+		return numFountainsParsed;
 	}
 	
 	protected void onProgessUpdate(Integer... values)
-	{
-		//super.onProgressUpdate(values);
-		//Log.d(TAG, values[0] + "% Processed");
-		//Toast.makeText(getBaseContext(), values[0] + "% Processed", Toast.LENGTH_SHORT).show();
-	}
+	{}
 	
 	@Override
 	protected void onPostExecute(Integer result)
 	{
 		try
 		{
-			//Set the flag to indicate that we've finished our task
-			setAsyncTaskFinished(true);
 			//Create a new message to send to the observing thread
 			Message msg = Message.obtain();
-			//1 will represent completion
 			msg.what = MyActionBar.Actions.REFRESH;
+			//Pack the number of fountains processed from the server
+			msg.arg1 = result;
 			//Post the message to the observer
 			messageHandler.sendMessage(msg);
 			
-			//Display the result in a toast
-			String resultString = result + " fountains processed!";
-			Toast.makeText(context, resultString, Toast.LENGTH_SHORT).show();
 			Log.d(TAG, "onPostExecute: Async returning to caller.");
 		}
 		catch(Exception e)
@@ -122,8 +100,11 @@ public class GetFountainsAsyncTask extends AsyncTask<String, Integer, Integer>
 		}
 	}
 
-	//Purpose: Queries the REST server identified by the passed URL and returns
-	//	the server's JSON response.
+	/**
+	 * Queries the REST server identified by the passed URL and returns
+	 * @param absoluteURL The URL for the server/controller/action to poll.
+	 * @return The server's JSON response.
+	 */
 	private String GetFountainsJSON(String absoluteURL)
 	{
 		String result = null;
@@ -143,7 +124,7 @@ public class GetFountainsAsyncTask extends AsyncTask<String, Integer, Integer>
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				//e.printStackTrace();
 				Log.e(TAG, "doInBackground: " + e);
 			}
 			
@@ -155,68 +136,108 @@ public class GetFountainsAsyncTask extends AsyncTask<String, Integer, Integer>
 		return result;
 	}
 	
-	//Purpose: Converts the passed JSON string into fountain objects and returns the list of objects.
-	//Returns: A list of fountain objects.
-	private ArrayList<Fountain> JSONtoFountain(String json)
+	/**
+	 * Purpose: Converts the passed JSON string into fountain objects and pushes a set
+	 * 	of converted fountain objects to the database at a time.
+	 * @param json: The JSON response from the RESTful server.
+	 * @return The number of fountains parsed from the JSON response.
+	 */
+	private int JSONtoFountain(String json)
 	{
 		//A list of fountains to hold the JSON to Fountain converted objects
 		ArrayList<Fountain> readFountains = new ArrayList<Fountain>();
+		//The number of entries/fountains in the JSON response
+		int numEntries = 0;
 		
 		//Convert the returned result into a JSON array
 		try
 		{
 			JSONArray entries = new JSONArray(json);
-			if(entries.length() != 0)
+			//Cache the length to avoid the lookup
+			numEntries = entries.length();
+			//If we have no entries, then something went wrong
+			if(numEntries == 0) return 0;
+			
+			Log.d(TAG, "onPostExecute: JSON Parsed! There are " + entries.length() + " fountain elements.");
+									
+			//Convert the JSON into Fountain Objects
+			for(int i = 0; i < numEntries; i++)
 			{
-				Log.d(TAG, "onPostExecute: JSON Parsed! There are " + entries.length() + " fountain elements.");
-								
-				//Convert the JSON into Fountain Objects
-				for(int i = 0; i < entries.length(); i++)
+				//Convert the current element to a string so we can extract its array contents
+				JSONObject fobj = new JSONObject(entries.getString(i));
+				//Get the values associated with the "Fountain" element
+				String fstring = fobj.getString("Fountain");
+				//Get the associated fountain status from the status element of the current array entry
+				String statusString = fobj.getString("Status");
+				//Create a usable object from the attribute data
+				JSONObject obj = new JSONObject(fstring);
+				JSONObject statusObj = new JSONObject(statusString);
+				
+				//Cache the longitude and latitude fields since we'll use them a lot.
+				double longitude = obj.getDouble(DBHelper.FountainTable.COL_LONGITUDE);
+				double latitude = obj.getDouble(DBHelper.FountainTable.COL_LATITUDE);
+				
+				//Get a fountain object from the pool to populate
+				Fountain f = dbAdapter.pool.borrow();
+				if(f == null) 
 				{
-					//Convert the current element to a string so we can extract its array contents
-					JSONObject fobj = new JSONObject(entries.getString(i));
-					//Get the values associated with the "Fountain" element
-					String fstring = fobj.getString("Fountain");
-					//Create a usable object from the attribute data
-					JSONObject obj = new JSONObject(fstring);
-					
-					//Create a dummy fountain object to populate
-					Fountain f = new Fountain();
-					//Set the properties of the fountain
-					f.setId(obj.getInt(DBHelper.FountainTable.COL_ID));
-					f.setLatitude(obj.getDouble(DBHelper.FountainTable.COL_LATITUDE));
-					f.setLongitude(obj.getDouble(DBHelper.FountainTable.COL_LONGITUDE));
-					f.setStatus(obj.getInt(DBHelper.FountainTable.COL_STATUS));
-					f.setCity_id(obj.getInt(DBHelper.FountainTable.COL_CITY_ID));
-						
-					//TODO: Implement address information	
-					
-					//Store the JSON converted fountain object in the list
-					readFountains.add(f);
-					//Publish the fountain number just processed
-					//publishProgress(i+1);
+					Log.e(TAG, "JSONtoFountain: Fountain object not borrowed. Pool is possibly full!");
+					return 0;
 				}
-			}//end if
+				
+				//Set the properties of the reusable fountain
+				f.setId(obj.getInt(DBHelper.FountainTable.COL_ID));
+				f.setLatitude(latitude);
+				f.setLongitude(longitude);
+				//Store the fountain status as the description text in the status object
+				f.setStatus(statusObj.getString(DBHelper.StatusTable.COL_DESCRIPTION));
+
+				readFountains.add(f);
+				
+				//Store the fountains in groups of 50
+				//50 was chosen because it still leaves room in the object pool of fountains.
+				//We do i+1 since we start the loop at 0. Changing the counter to start at 1
+				//	would break the container access.
+				if(((i+1) % 50) == 0)
+					pushAndRelease(readFountains);
+				
+			}//end for
+			
+			//Push the leftover data to the db
+			//We store in groups of 50, but if we had 51 fountains,
+			//	the last fountain would still need to be stored.
+			if(readFountains.size() > 0)
+				pushAndRelease(readFountains);
+			
 		}
 		catch (JSONException e)
 		{
-			e.printStackTrace();
-			Log.e(TAG, "doInBackground: " + e);
+			Log.e(TAG, "JSONtoFountain: " + e);
 		}
-			
-		Log.d(TAG, "onPostExecute: Fountain Objects Created! There are " + readFountains.size() + " fountains.");
-			
-		return readFountains;
-	}
+		catch (Exception e)
+		{
+			Log.e(TAG, "JSONtoFountain: " + e);
+		}
+		
+		return numEntries;
+	}//end JSONtoFountain
 	
-
-	public void setAsyncTaskFinished(boolean asyncTaskFinished)
+	/**
+	 * Pushes the fountain objects in the list to the DB
+	 * and releases them from the DBAdapter's object pool. The 
+	 * passed list is then cleared of its contents upon flushing
+	 * to the database.
+	 * @param fountains The list of fountains to be stored, released, then cleared.
+	 */
+	private void pushAndRelease(ArrayList<Fountain> fountains)
 	{
-		this.asyncTaskFinished = asyncTaskFinished;
-	}
-
-	public boolean isAsyncTaskFinished()
-	{
-		return asyncTaskFinished;
+		int num = fountains.size();
+		//Push the fountains to the database
+		dbAdapter.AddOrUpdateFountains(fountains);
+		//Release the fountain objects back to the pool
+		for (int j = 0; j < num; j++)
+			dbAdapter.pool.release(fountains.get(j));
+		//Clear the array list
+		fountains.clear();
 	}
 }

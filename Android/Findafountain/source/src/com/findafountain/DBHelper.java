@@ -22,13 +22,18 @@ public class DBHelper extends SQLiteOpenHelper
         public static final String COL_LONGITUDE = "longitude";  
         public static final String COL_LATITUDE = "latitude"; 
         public static final String COL_STATUS = "status";
-        //TODO: Mirror the server's database schema
-        
-        public static final String COL_CITY_ID = "city_id";
     } 
 	
-	//TODO: Create structures (similar to FountainTable) for the other tables. 
-	//TODO: Figure out a better way to handle the database creation
+	//Exposes the table columns
+	//We don't create a specific statuses table on the client to avoid the 
+	//	maintenance of a non-changing lookup table, but we'll expose the columns 
+	//	to facilitate the combining of the status description as the fountain's status
+	public final class StatusTable 
+	{  
+        public static final String NAME = "statuses";  
+        public static final String COL_ID = "id";  
+        public static final String COL_DESCRIPTION = "description";
+    }
 	
 	public DBHelper(Context context) 
     {
@@ -39,34 +44,30 @@ public class DBHelper extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db) 
     {
     	//Create Fountains Table
-    	//Note: city_id references cities.id
-    	//TODO: Implement the reference to cities table
-
     	//Construct the CREATE table string
     	String sql = String.format(    
-			"create table %s " +
-	        "(%s integer primary key, " +
-	        "%s double, " +
-	        "%s double, " +
-	        "%s integer, " +
-	        "%s integer); ", 
+			"create table %s " +			//Table Name
+	        "(%s integer primary key, " +	//Fountain ID
+	        "%s double, " +					//Longitude
+	        "%s double, " +					//Latitude
+	        "%s varchar(256)); ", 				//Status
 	        FountainTable.NAME,
 	        FountainTable.COL_ID, 
 	        FountainTable.COL_LONGITUDE, 
 	        FountainTable.COL_LATITUDE,
-	        FountainTable.COL_STATUS,
-	        FountainTable.COL_CITY_ID);
+	        FountainTable.COL_STATUS);
     	
-    	db.execSQL(sql);
+    	try
+    	{
+    		db.execSQL(sql);
+    		Log.d(TAG, "onCreate: Database Created!");
+    	}
+    	catch(Exception e)
+    	{
+    		Log.e(TAG,"onCreate: " + e);
+    	}
     	
-    	//Create fountain_status table
     	
-    	//Create cities table
-    	
-    	//Create ratings table
-    	
-    	//Create status table
-    	Log.d(TAG, "onCreate: Database Created!");
     }
  
     @Override

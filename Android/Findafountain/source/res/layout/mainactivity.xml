@@ -20,4 +20,7 @@
 	    android:clickable = "true"
 	    android:apiKey="09ne3QOAjC2282VKYT7MDEt77tquELPIi5AAUkA"
     />
+    <!-- Debug API Key android:apiKey="09ne3QOAjC2282VKYT7MDEt77tquELPIi5AAUkA" 
+    	 Release API Key android:apiKey="09ne3QOAjC21DfM9e8VsU3gGT81JZ26x9fENSWw"
+    -->
 </LinearLayout>

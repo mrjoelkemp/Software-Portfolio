@@ -20,6 +20,19 @@ public class ZoomHandler extends Handler
 	//Caller's map view instance
 	private MapView mapView;
 	
+	/**
+	 * Represents an enumeration of action values that will be used
+	 * in messages sent to the main UI. This way, the main UI doesn't 
+	 * need to know the integer values associated with the actions; it
+	 * can simply use these constants.
+	 * @author Joel
+	 */
+	public static final class Actions
+	{
+		public static final int ZOOM_OUT = 0;
+		public static final int ZOOM_IN = 1;
+	}
+	
 	public ZoomHandler(MapView mapView, Handler zoomHandler)
 	{
 		this.mapView = mapView;
@@ -39,7 +52,14 @@ public class ZoomHandler extends Handler
     			Log.d(TAG, "zoomChecker: Zoom Level Changed from " + oldZoomLevel + " to " + newZoomLevel);
     			//Send a message to the caller indicating that there was a zoom change.
     			Message msg = Message.obtain();
-    			msg.what = 1;
+    			
+    			//Indicate whether we zoomed in or out
+    			if(newZoomLevel < oldZoomLevel)
+    				msg.what = Actions.ZOOM_OUT;
+    			else if(newZoomLevel > oldZoomLevel)
+    				msg.what = Actions.ZOOM_IN;
+    			
+    			//msg.what = 1;
     			zoomHandler.sendMessage(msg);
     			//Remember the most recent zoom level
     			oldZoomLevel = newZoomLevel;

@@ -32,9 +32,14 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>android-mapviewballoons_src</name>
+			<name>QuickAction_src</name>
 			<type>2</type>
-			<locationURI>_android_android_mapviewballoons_9ae9cbc7/src</locationURI>
+			<locationURI>_android_QuickAction_4ee25263/src</locationURI>
+		</link>
+		<link>
+			<name>com_facebook_android_src</name>
+			<type>2</type>
+			<locationURI>_android_com_facebook_android_7f2a44f4/src</locationURI>
 		</link>
 		<link>
 			<name>com_markupartist_android_widget_actionbar_src</name>

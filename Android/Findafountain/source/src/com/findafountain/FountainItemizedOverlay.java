@@ -10,18 +10,21 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
 
 import java.util.List;
 
-public abstract class FountainItemizedOverlay <Item extends OverlayItem> extends ItemizedOverlay<Item> 
+/**
+ * An overlay of fountain overlay items that shows balloons for clicked items.
+ * @author Joel
+ */
+public abstract class FountainItemizedOverlay  extends ItemizedOverlay<FountainOverlayItem> 
 {
 		private MapView mapView;
-		private FountainBalloonOverlayView<Item> balloonView;
+		private FountainBalloonOverlayView balloonView;
 		private View clickRegion;
 		private int viewOffset;
 		final MapController mc;
-		private Item currentFocussedItem;
+		private FountainOverlayItem currentFocussedItem;
 		private int currentFocussedIndex;
 		
 		/**
@@ -62,7 +65,7 @@ public abstract class FountainItemizedOverlay <Item extends OverlayItem> extends
 		 * @param item - The item whose balloon is tapped.
 		 * @return true if you handled the tap, otherwise false.
 		 */
-		protected boolean onBalloonTap(int index, Item item) {
+		protected boolean onBalloonTap(int index, FountainOverlayItem item) {
 			return false;
 		}
 
@@ -76,19 +79,23 @@ public abstract class FountainItemizedOverlay <Item extends OverlayItem> extends
 			currentFocussedItem = createItem(index);
 			
 			boolean isRecycled;
-			if (balloonView == null) {
+			if (balloonView == null) 
+			{
 				balloonView = createBalloonOverlayView();
 				clickRegion = (View) balloonView.findViewById(R.id.balloon_inner_layout);
 				clickRegion.setOnTouchListener(createBalloonTouchListener());
 				isRecycled = false;
-			} else {
+			} 
+			else
+			{
 				isRecycled = true;
 			}
 		
 			balloonView.setVisibility(View.GONE);
 			
 			List<Overlay> mapOverlays = mapView.getOverlays();
-			if (mapOverlays.size() > 1) {
+			if (mapOverlays.size() > 1) 
+			{
 				hideOtherBalloons(mapOverlays);
 			}
 			
@@ -117,8 +124,8 @@ public abstract class FountainItemizedOverlay <Item extends OverlayItem> extends
 		 * Creates the balloon view. Override to create a sub-classed view that
 		 * can populate additional sub-views.
 		 */
-		protected FountainBalloonOverlayView<Item> createBalloonOverlayView() {
-			return new FountainBalloonOverlayView<Item>(getMapView().getContext(), getBalloonBottomOffset());
+		protected FountainBalloonOverlayView createBalloonOverlayView() {
+			return new FountainBalloonOverlayView(getMapView().getContext(), getBalloonBottomOffset());
 		}
 		
 		/**
@@ -127,6 +134,13 @@ public abstract class FountainItemizedOverlay <Item extends OverlayItem> extends
 		 */
 		protected MapView getMapView() {
 			return mapView;
+		}
+		
+		/**
+		 * Return the active balloon instance.
+		 */
+		protected FountainBalloonOverlayView getBalloonView(){
+			return balloonView;
 		}
 		
 		/**
@@ -147,8 +161,8 @@ public abstract class FountainItemizedOverlay <Item extends OverlayItem> extends
 		private void hideOtherBalloons(List<Overlay> overlays) {
 			
 			for (Overlay overlay : overlays) {
-				if (overlay instanceof FountainItemizedOverlay<?> && overlay != this) {
-					((FountainItemizedOverlay<?>) overlay).hideBalloon();
+				if (overlay instanceof FountainItemizedOverlay && overlay != this) {
+					((FountainItemizedOverlay) overlay).hideBalloon();
 				}
 			}
 			

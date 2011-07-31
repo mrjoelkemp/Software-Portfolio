@@ -1,21 +1,28 @@
 package com.findafountain;
 
+import java.util.HashMap;
+import java.util.TreeSet;
+
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.Toast;
-import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.AbstractAction;
 
-//Purpose: Represents an action bar that lives at the top of the main activity and triggers
-//	asynchronous get requests and other actions.
+import com.markupartist.android.widget.ActionBar;
+
+/**
+ * Represents an action bar that lives at the top of the main 
+ * activity and triggers asynchronous get requests and other actions.
+ */
 public class MyActionBar extends ActionBar
 {
 	private static final String TAG = "MyActionBar";
-	//private ActionBar actionBar;
+	
 	//The context of the calling view
 	private Context context;
 	private DBAdapter db;
@@ -30,7 +37,6 @@ public class MyActionBar extends ActionBar
 	
 	//Handles messages coming from the async task
 	private Handler asyncHandler;
-	
 	//Caller's message handler
 	private Handler mapHandler;
 	
@@ -38,7 +44,11 @@ public class MyActionBar extends ActionBar
 	//This regulates the number of active tasks.
 	private boolean canStartTask;
 	
-	//Purpose: Constructor that sets up an async task and action bar actions
+	/**
+	 * Constructor that sets up an async task and action bar actions
+	 * @param context View context used to load resources.
+	 * @param attrs View attributes passed to parent.
+	 */
 	public MyActionBar(Context context, AttributeSet attrs)
 	{
 		//Since we're inflating from an xml file, we need to pass the 
@@ -48,23 +58,32 @@ public class MyActionBar extends ActionBar
 		
 	}//end constructor
 	
-	//Purpose: Sets up the handled actions.
+	/**
+	 * Sets up the handled actions and passes the lookup structures to the async task.
+	 * @param db The database adapter to pass to the async task.
+	 * @param mapHandler The message handler for the main UI. 
+	 * @param lookupStructures Data structures for the async task to populate.
+	 * 
+	 */
 	//Notes: mapHandler is final due to necessary access within asyncHandler
 	public void Initialize(DBAdapter db, final Handler mapHandler)
 	{
-		//this.mainActivity = mainActivity;
+		
 		this.db = db;
 		this.mapHandler = mapHandler;
 		
 		//We have no task yet, so it's okay to start one.
 		canStartTask = true;
 		this.setTitle(R.string.app_name);
+		this.setHapticFeedbackEnabled(true);
 		
 		//Initialize progress to exist but be invisible
 		this.setProgressBarVisibility(View.GONE);
+		this.setHomeLogo(R.drawable.actionbarlogo);
+		
 		this.addAction(new AddFountainAction());
-		this.addAction(new FilterAction());
-		this.addAction(new RefreshAction());
+		//this.addAction(new FilterAction());
+		//this.addAction(new RefreshAction());
 		this.addAction(new MyLocationAction());
 		
 		//Handles messages from the GetFountainsAsyncTask
@@ -82,7 +101,10 @@ public class MyActionBar extends ActionBar
 						
 						//Send a message to the main UI to let them know that the task finished
 						Message msg2 = Message.obtain();
+						//The task that was completed
 						msg2.what = Actions.REFRESH;
+						//The number of fountains processed
+						msg2.arg1 = msg.arg1;
 						mapHandler.sendMessage(msg2);
 						
 						canStartTask = true;
@@ -95,7 +117,10 @@ public class MyActionBar extends ActionBar
 		
 	}
 	
-	//Purpose: Represents an action to add fountains to the map
+	/**
+	 * Purpose: Represents an action to add fountains to the map
+	 * @author Joel
+	 */
     public class AddFountainAction extends AbstractAction {
 
         public AddFountainAction() {
@@ -104,12 +129,20 @@ public class MyActionBar extends ActionBar
 
         @Override
         public void performAction(View view) {
-        	Toast.makeText(context, "Sit tight! I need to sleep too!", Toast.LENGTH_SHORT).show();
+        	performHapticFeedback(1);
+        	//Pack a message to send to the main UI
+        	Message msg = Message.obtain();
+        	msg.what = Actions.ADD;
+        	mapHandler.sendMessage(msg);
+
         	Log.d(TAG,"AddFountainAction: Pressed!");
         }
     }
 
-    //Purpose: Represents an action to perform an async get request.
+    /**
+     * Represents an action to perform an async get request.
+     * @author Joel
+     */
     public class RefreshAction extends AbstractAction{
     	public RefreshAction() 
     	{
@@ -119,6 +152,7 @@ public class MyActionBar extends ActionBar
         @Override
         public void performAction(View view) 
         {
+        	performHapticFeedback(1);
         	//If we are allowed to start another async task.
         	if(canStartTask)
         	{
@@ -132,7 +166,9 @@ public class MyActionBar extends ActionBar
         		//Note: We don't send a message to the main UI just yet.
         		//	We have to wait until the async task notifies us of its completion.
         		//	The notification comes to our asynchandler.
-	        	new GetFountainsAsyncTask(context, db, asyncHandler).execute("fountains/index.json");
+	        	//new GetFountainsAsyncTask(db, asyncHandler).execute("fountains/index.json");
+	        	new GetFountainsAsyncTask(db, asyncHandler).execute("fountains/index.json");
+	        	
 	        	Log.d(TAG, "RefreshAction: Async Task Started...");
         	}
         	else
@@ -152,6 +188,7 @@ public class MyActionBar extends ActionBar
         @Override
         public void performAction(View view) 
         {
+        	performHapticFeedback(1);
         	//Pack a message to send to the main UI
         	Message msg = Message.obtain();
         	msg.what = Actions.MY_LOCATION;
@@ -161,7 +198,10 @@ public class MyActionBar extends ActionBar
         }
     }
     
-    //Purpose: Represents an action to filter the drawn overlay lists
+    /**
+     * Represents an action to filter the drawn overlay lists
+     * @author Joel
+     */
     public class FilterAction extends AbstractAction {
 
         public FilterAction() {
@@ -171,6 +211,7 @@ public class MyActionBar extends ActionBar
         @Override
         public void performAction(View view) 
         {	
+        	performHapticFeedback(1);
           	//Notify the main UI that we want to filter the fountains
         	Message msg = Message.obtain();
         	msg.what = Actions.FILTER;

@@ -30,6 +30,7 @@ public class PanHandler extends Handler
 		this.panHandler = panHandler;
 		oldPanCenter = mapView.getMapCenter();
 		isPanning = false;
+		Log.d(TAG, "Pan Handler Initialized!");
 	}
 	
 	private Runnable panChecker = new Runnable()
