@@ -1,0 +1,46 @@
+
+  Spec for Assignment
+
+what to submit:
+  a CD with 1) source codes
+	    2) executable files
+	    3) sample running results (e.g., screen shots)
+
+deadline:
+  10/26 during lecture
+
+note:
+  o This is an individual assignment, no collaboration in any
+    form is allowed. 
+  o we will have a brief discussion session in our upcoming
+    lecture about this assignment.
+
+Question 1.
+  Implement the closure operator: ask users to first input the
+  names of the attributes, for simplicity upper case single
+  characters will do, e.g., ABCD indicates a DB table with 4
+  atributes A thru D. Next the users are asked to key in the
+  set of FDs, such as A->C. All trivial FDs are ignored and
+  those FDs not in non-trivial forms such as AB->CD are translated
+  to standard non-trivial forms AB->C and AB->D. Repeated FDs
+  are ignored. Within a loop the users can type any set of 
+  attributes as the seed, your program outputs the closure of
+  these seeds. Your program exit from the loop when the users type 
+  in "quit". 
+
+Question 2.
+  Implement a parser: users are first asked to input the single upper
+  case attribute names of all DB schemas. For each attribute the users
+  should also identify its types, for simplicity only char and int
+  are allowed. After inputting all schema definitions, the users can
+  then write SQL statements such as 
+     Select attribute name(s)
+     from table
+     where condition
+  condition is a single boolean expression in the form such as
+  A > 4 if attribute A in table is of type int or A=='M' if A is
+  of type char. For simplicity only one table is allowed in the from
+  clause, and one condition is permitted. Your program must check the
+  correctness of the syntax, the existence of attribute name(s) in
+  schema table, and the right format of condition. For incorrect
+  SQL statement your program should identify where the error is.
