@@ -1,7 +1,5 @@
 package com.findafountain;
 
-import android.util.Log;
-
 import com.google.android.maps.GeoPoint;
 
 /**
@@ -12,18 +10,15 @@ import com.google.android.maps.GeoPoint;
  * We can also use this class in an object pool.
  * @author Joel
  */
-public class LongLat
-{
+public class LongLat{
 	//Declared public to avoid useless accessor lookups
 	public double longitude;
 	public double latitude;
 	private int cachedHashCode;
-	private static final String TAG = "LongLat";
 	/**
 	 * Initializes the LongLat object to a zero state.
 	 */
-	public LongLat()
-	{
+	public LongLat(){
 		longitude = 0;
 		latitude = 0;
 		cachedHashCode = 0;
@@ -34,8 +29,7 @@ public class LongLat
 	 * @param longitude Longitude coordinate.
 	 * @param latitude Latitude coordinate.
 	 */
-	public LongLat(double longitude, double latitude)
-	{
+	public LongLat(double longitude, double latitude){
 		this.longitude = longitude;
 		this.latitude = latitude;
 	}
@@ -46,8 +40,7 @@ public class LongLat
 	 * of the Double object directly.
 	 * @return The hashcode for this object.
 	 */
-	public int hashCode()
-	{
+	public int hashCode(){
 		//long v = Double.doubleToLongBits(longitude) + Double.doubleToLongBits(latitude);
 		//return new Double(longitude).hashCode() + new Double(latitude).hashCode();
 		//return (int)(v^(v>>>32));
@@ -62,8 +55,7 @@ public class LongLat
 	}
 	
 	@Override
-	public boolean equals(Object o)
-	{
+	public boolean equals(Object o){
 		//Self check
 		if(o == this) return true;
 		//Null or non-matching type check
@@ -73,8 +65,6 @@ public class LongLat
 		LongLat cp = LongLat.class.cast(o);
 		
 		boolean isEqual = (longitude == cp.longitude) && (latitude == cp.latitude);
-//		Log.d(TAG, "longitude = " + longitude + " latitude = " + latitude);
-//		Log.d(TAG, "cp.longitude = " + cp.longitude + " cp.latitude = " + cp.latitude);
 		return isEqual;
 	}
 	
@@ -82,8 +72,7 @@ public class LongLat
 	 * Initializes the longlat attributes from the passed Geopoint
 	 * @param p A geopoint whose values will populate this object's attributes.
 	 */
-	public void initFromGeoPoint(GeoPoint p)
-	{
+	public void initFromGeoPoint(GeoPoint p){
 		longitude = LongLat.microdegreeToCoordinate(p.getLongitudeE6());
 		latitude = LongLat.microdegreeToCoordinate(p.getLatitudeE6());
 	}

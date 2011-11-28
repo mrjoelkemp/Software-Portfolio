@@ -61,27 +61,26 @@ containing a value of this type.
     }
     public static final class id {
         public static final int about_author=0x7f090002;
-        public static final int about_email=0x7f090003;
-        public static final int about_message=0x7f090005;
-        public static final int about_website=0x7f090004;
-        public static final int actionbar_actions=0x7f09000d;
-        public static final int actionbar_home=0x7f090008;
-        public static final int actionbar_home_bg=0x7f09000a;
-        public static final int actionbar_home_btn=0x7f09000b;
-        public static final int actionbar_home_is_back=0x7f09000c;
-        public static final int actionbar_home_logo=0x7f090009;
-        public static final int actionbar_item=0x7f090010;
-        public static final int actionbar_progress=0x7f09000e;
-        public static final int actionbar_title=0x7f09000f;
+        public static final int about_message=0x7f090004;
+        public static final int about_website=0x7f090003;
+        public static final int actionbar_actions=0x7f09000c;
+        public static final int actionbar_home=0x7f090007;
+        public static final int actionbar_home_bg=0x7f090009;
+        public static final int actionbar_home_btn=0x7f09000a;
+        public static final int actionbar_home_is_back=0x7f09000b;
+        public static final int actionbar_home_logo=0x7f090008;
+        public static final int actionbar_item=0x7f09000f;
+        public static final int actionbar_progress=0x7f09000d;
+        public static final int actionbar_title=0x7f09000e;
         public static final int balloon_inner_layout=0x7f090001;
         public static final int balloon_main_layout=0x7f090000;
-        public static final int close_img_button=0x7f090006;
-        public static final int mainlayout=0x7f090011;
-        public static final int menu_about=0x7f090015;
-        public static final int menu_refresh=0x7f090014;
-        public static final int myactionbar=0x7f090012;
-        public static final int mymapview=0x7f090013;
-        public static final int screen=0x7f090007;
+        public static final int close_img_button=0x7f090005;
+        public static final int mainlayout=0x7f090010;
+        public static final int menu_about=0x7f090014;
+        public static final int menu_refresh=0x7f090013;
+        public static final int myactionbar=0x7f090011;
+        public static final int mymapview=0x7f090012;
+        public static final int screen=0x7f090006;
     }
     public static final class layout {
         public static final int aboutballoon=0x7f030000;

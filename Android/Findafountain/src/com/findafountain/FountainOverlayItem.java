@@ -2,7 +2,6 @@ package com.findafountain;
 
 import android.graphics.drawable.Drawable;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 
 /**
@@ -18,8 +17,7 @@ import com.google.android.maps.OverlayItem;
  * pooled or reused.
  * @author Joel
  */
-public class FountainOverlayItem extends OverlayItem
-{
+public class FountainOverlayItem extends OverlayItem{
 	//Pointer to the fountain data that associated with the overlay item
 	private Fountain fountain;
 	
@@ -28,8 +26,7 @@ public class FountainOverlayItem extends OverlayItem
 	 * @param f Fountain information associated with overlay
 	 * @param marker Drawable to be rendered
 	 */
-	public FountainOverlayItem(Fountain f, Drawable marker)
-	{
+	public FountainOverlayItem(Fountain f, Drawable marker)	{
 		//Overlay position is the fountain's coordinates
 		super(f.getCoordinates(), "", "");
 		super.setMarker(marker);

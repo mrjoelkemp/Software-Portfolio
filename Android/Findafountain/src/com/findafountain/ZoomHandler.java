@@ -8,8 +8,7 @@ import android.util.Log;
 
 //Purpose: Represents a handler for polling the main UI to check for differences
 //	in zoom levels due to pinching or zoom controls.
-public class ZoomHandler extends Handler
-{
+public class ZoomHandler extends Handler{
 	private static final String TAG = "ZoomHandler";
 	//The millisecond delay for polling
 	public static final int zoomCheckingDelay = 500;
@@ -27,8 +26,7 @@ public class ZoomHandler extends Handler
 	 * can simply use these constants.
 	 * @author Joel
 	 */
-	public static final class Actions
-	{
+	public static final class Actions{
 		public static final int ZOOM_OUT = 0;
 		public static final int ZOOM_IN = 1;
 	}
@@ -41,14 +39,11 @@ public class ZoomHandler extends Handler
 	}
 	
 	//Purpose: Handles the polling of the zoom level
-    private Runnable zoomChecker = new Runnable()
-    {
-    	public void run()
-        {
+    private Runnable zoomChecker = new Runnable(){
+    	public void run(){
     		int newZoomLevel = mapView.getZoomLevel();
     		//If the previous zoom level is not equal to the new zoom level
-    		if(oldZoomLevel != newZoomLevel)
-    		{
+    		if(oldZoomLevel != newZoomLevel){
     			Log.d(TAG, "zoomChecker: Zoom Level Changed from " + oldZoomLevel + " to " + newZoomLevel);
     			//Send a message to the caller indicating that there was a zoom change.
     			Message msg = Message.obtain();

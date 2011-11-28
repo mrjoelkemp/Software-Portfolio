@@ -18,7 +18,7 @@
 	    android:layout_height="fill_parent"
 	    android:enabled= "true"
 	    android:clickable = "true"
-	    android:apiKey="09ne3QOAjC2282VKYT7MDEt77tquELPIi5AAUkA"
+	    android:apiKey="09ne3QOAjC21DfM9e8VsU3gGT81JZ26x9fENSWw"
     />
     <!-- Debug API Key android:apiKey="09ne3QOAjC2282VKYT7MDEt77tquELPIi5AAUkA" 
     	 Release API Key android:apiKey="09ne3QOAjC21DfM9e8VsU3gGT81JZ26x9fENSWw"

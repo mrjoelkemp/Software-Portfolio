@@ -14,6 +14,11 @@ import android.util.Log;
 import com.findafountain.RestClient.RequestMethod;
 
 /**
+ * Legacy code. This is no longer used and has transitioned to
+ * GetOpenFountainsAsyncTask to retrieve the fountain data from the 
+ * NYC Open Data water fountain dataset.
+ * 
+ * 
  * Represents an async thread that polls a remote server for fountain information,
  * converts the server's JSON response into usable fountain objects, calls for the
  * local storage of the fountains, and notifies the caller about its task completion.

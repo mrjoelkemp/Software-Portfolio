@@ -212,6 +212,9 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 				switch (msg.what) {
 					case CustomItemizedOverlay.ZOOM_TOO_FAR:
 						Toast.makeText(MainActivity.this, "You zoomed out too far!", Toast.LENGTH_SHORT).show();
+						//When you zoom out too far, no fountains are shown
+						mapView.getController().setZoom(INITIAL_ZOOM_LEVEL);
+			        	currentItemizedOverlay.resetZoomMsgFlag();
 						break;
 				}
 			}

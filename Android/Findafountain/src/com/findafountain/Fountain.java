@@ -46,7 +46,7 @@ public class Fountain implements Poolable{
 	 * Returns the lat and long coords as a micro-degree Geopoint
 	 */
 	public GeoPoint getCoordinates(){
-		GeoPoint point = new GeoPoint((int) (latitude * 1E6), (int)(longitude * 1E6));
+		GeoPoint point = new GeoPoint((int)(latitude * 1E6), (int)(longitude * 1E6));
 		return point;
 	}
 	

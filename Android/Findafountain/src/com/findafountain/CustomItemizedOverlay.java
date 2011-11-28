@@ -1,22 +1,16 @@
 package com.findafountain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Toast;
 
-import com.findafountain.MyActionBar.Actions;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 
@@ -36,6 +30,8 @@ public class CustomItemizedOverlay extends FountainItemizedOverlay {
 	private HashSet<LongLat> itemLocations;
 	private Handler mapHandler;
 	private static final String TAG = "CustomItemizedOverlay";
+	//Regulates the sending of the main UI message when the user zoomed too far.
+	private boolean zoomMsgSent;
 	
 	
 	public CustomItemizedOverlay(Drawable defaultMarker, MapView mapView, Handler mapHandler) {
@@ -145,6 +141,18 @@ public class CustomItemizedOverlay extends FountainItemizedOverlay {
 	public int size() {
 		return overlayItems.size();
 	}
+	
+	/**
+	 * Called from the main UI to acknowledge the 
+	 * receipt of the zoom_too_far message.
+	 * 
+	 * If the flag is not reset, then the message
+	 * is never sent again.
+	 */
+	public void resetZoomMsgFlag(){
+		zoomMsgSent = false;
+	}
+	
 	/**
 	 * Purges the list of handled locations and overlays
 	 */
@@ -183,8 +191,8 @@ public class CustomItemizedOverlay extends FountainItemizedOverlay {
 	 */
 	@Override
     public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-        if (mapView.getZoomLevel() < MIN_ZOOM_LEVEL){
-        //    mapView.getController().setZoom(MIN_ZOOM_LEVEL);
+		if (mapView.getZoomLevel() < MIN_ZOOM_LEVEL && !zoomMsgSent){
+			zoomMsgSent = true;
         	Message msg = Message.obtain();
         	msg.what = ZOOM_TOO_FAR;
         	mapHandler.sendMessage(msg);
