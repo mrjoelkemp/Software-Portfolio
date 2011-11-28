@@ -26,8 +26,8 @@
     <string name="menu_about_text">About</string>
     
     <!-- About -->
-    <string name="about_author_name">Created by: Mr. Joel Kemp</string>
+    <string name="about_author_name">Mr. Joel Kemp</string>
     <string name="about_email">findafountain@mrjoelkemp.com</string>
     <string name="about_website">www.mrjoelkemp.com</string>
-    <string name="about_message">Lovingly made in NYC. Thanks!</string>
+    <string name="about_message">Lovingly made in NYC!</string>
 </resources>

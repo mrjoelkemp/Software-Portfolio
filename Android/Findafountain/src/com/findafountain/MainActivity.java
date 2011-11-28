@@ -1,6 +1,7 @@
 package com.findafountain;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
@@ -64,6 +65,8 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 	//Note: This needs to be accessible within all subclasses.
 	private MyActionBar actionBar;
 	
+	private static final int INITIAL_ZOOM_LEVEL = 17;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,8 +77,7 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
         Initialize();
          
         //Simulate a clicking of the actionbar refresh button
-	    actionBar.new RefreshAction().performAction(mapView);
-        
+	    actionBar.new RefreshAction().performAction(mapView);        
     }
     
 	@Override
@@ -115,12 +117,10 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 	 */
     private void Initialize()
     {    
-        //Create an instance of our custom map view
+        //Create an instance of our custom map view and set attributes
         mapView = (MyMapView) findViewById(R.id.mymapview);
         mapView.setBuiltInZoomControls(true);			
-		
-		//Set up the map controller
-		mapView.getController().setZoom(17);
+		mapView.getController().setZoom(INITIAL_ZOOM_LEVEL);
 		
 		//Draw the user's current location
 		CreateMyLocation();
@@ -129,29 +129,27 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 		isDrawingFountains = false;
 		
 		//Create the handler that maintains the changing zoom level overlay renderings
-		zoomHandler = new ZoomHandler(mapView, new Handler()
-		{
-			public void handleMessage(Message msg) 
-			{
+		zoomHandler = new ZoomHandler(mapView, new Handler(){
+			public void handleMessage(Message msg){
 				super.handleMessage(msg);
-				switch (msg.what) 
-				{
+				switch (msg.what){
 					//If we zoomed out, then redraw the fountains. Zooming in just means we're seeing what we've already drawn
 					case ZoomHandler.Actions.ZOOM_OUT:
 						DrawFountainLocations();		
 						Log.d(TAG, "zoomMessageHandler: Zoom Out Triggered Redraw!");
 						break;
+					case ZoomHandler.Actions.ZOOM_IN:
+						DrawFountainLocations();		
+						Log.d(TAG, "zoomMessageHandler: Zoom In Triggered Redraw!");
+						break;
 				}
 			}
 		});
 		
-		panHandler = new PanHandler(mapView, new Handler()
-		{
-			public void handleMessage(Message msg) 
-			{
+		panHandler = new PanHandler(mapView, new Handler(){
+			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
-				switch (msg.what) 
-				{
+				switch (msg.what) {
 					//The pan finished
 					case 1:
 						DrawFountainLocations();
@@ -162,42 +160,31 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 		});
 
 		//Handles all incoming messages from the action bar
-		Handler actionbarMessageHandler = new Handler()
-		{
-			public void handleMessage(Message msg) 
-			{
+		Handler actionbarMessageHandler = new Handler(){
+			public void handleMessage(Message msg){
 				super.handleMessage(msg);
-				switch (msg.what) 
-				{
-					//Refresh
+				switch (msg.what) {
 					case MyActionBar.Actions.REFRESH:
-						if(msg.arg1 == -1)
-						{
+						if(msg.arg1 == -1){
 							Toast.makeText(MainActivity.this, "Sorry, try refreshing later.", Toast.LENGTH_LONG).show();
 							Log.d(TAG, "actionbarMessageHandler: Refresh error handled!");
-						}
-						else
-						{
+						} else {
 							DrawFountainLocations();
 							Log.d(TAG, "actionbarMessageHandler: Refresh Message Handled!");
 						}
 						break;
-					//Add 
 					case MyActionBar.Actions.ADD:
 						break;
-					//My Location
 					case MyActionBar.Actions.MY_LOCATION:
 						//Animate to the user's last known location
 						GeoPoint myLoc = myLocationOverlay.getMyLocation();
 						//Make sure the location was found.
 						//If the GPS signal isn't found, then the app bombs without this check
-						if(myLoc != null)
-						{
+						if(myLoc != null){
 							mapView.getController().animateTo(myLoc);
+							mapView.getController().setZoom(INITIAL_ZOOM_LEVEL);
 							Log.d(TAG, "actionbarMessageHandler: MyLocation message handled!");
-						}
-						else if(myLoc == null)
-						{
+						} else if(myLoc == null){
 							Toast.makeText(MainActivity.this, "Your location is currently unavailable!", Toast.LENGTH_SHORT).show();
 							Log.e(TAG, "actionbarMessageHandler: My location is null. Problem finding location.");
 						}
@@ -208,12 +195,10 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 		
 		//Initialize the database adapter for all database operations
 		dbAdapter = new DBAdapter(this);
-		if(dbAdapter == null)
-		{
+		if(dbAdapter == null){
 			Log.e(TAG, "Initialize: dbAdapter not created!");
 			return;
 		}
-		
 		Log.d(TAG, "Initialize: dbAdapter Created.");
 		
 		//Create the action bar
@@ -221,10 +206,20 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 		actionBar.Initialize(dbAdapter, actionbarMessageHandler);
 		Log.d(TAG, "Initialize: Actionbar Created.");
 					
+		Handler itemizedOverlayHandler = new Handler(){
+			public void handleMessage(Message msg){
+				super.handleMessage(msg);
+				switch (msg.what) {
+					case CustomItemizedOverlay.ZOOM_TOO_FAR:
+						Toast.makeText(MainActivity.this, "You zoomed out too far!", Toast.LENGTH_SHORT).show();
+						break;
+				}
+			}
+		};
 		//Default drawable is drinkable. Don't delete as Drawing uses this too.
 		currentDrawable = (Drawable) this.getResources().getDrawable(R.drawable.drinkable);
 		Log.d(TAG, "Initialize: Current Drawable Created.");
-		currentItemizedOverlay = new CustomItemizedOverlay(currentDrawable, mapView);		
+		currentItemizedOverlay = new CustomItemizedOverlay(currentDrawable, mapView, itemizedOverlayHandler);		
 		Log.d(TAG, "Initialize: CustomItemizedOverlay Created.");
 		
 		//Init the viewing bounds
@@ -237,28 +232,29 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
     }//end Initialize()
     
     /**
-     * Purpose: Sets up the MyLocationOverlay object that maintains the user's
+     * Sets up the MyLocationOverlay object that maintains the user's
      * current location and renders both a marker and approximation radius.
+     * 
+     * Note: If the location is unavailable, then a toast is shown
      */
     private void CreateMyLocation()
     {
-    	//Create the My Location overlay
 		myLocationOverlay = new MyLocationOverlay(this, mapView);
         mapView.getOverlays().add(myLocationOverlay);
         myLocationOverlay.enableCompass();
         myLocationOverlay.enableMyLocation();
-        myLocationOverlay.runOnFirstFix(new Runnable() 
-        {
+        myLocationOverlay.runOnFirstFix(new Runnable(){
         	//Purpose: Handles what occurs when the location overlay object	is first created!
-            public void run() 
-            {
+            public void run(){
             	//Grab the user's best known location and move the map to it.
             	GeoPoint myLoc = myLocationOverlay.getMyLocation();
-            	if(myLoc != null)
-            		mapView.getController().animateTo(myLoc);
+            	if(myLoc != null) mapView.getController().animateTo(myLoc);
+            	else { 							
+            		Toast.makeText(MainActivity.this, "Your location is currently unavailable!", Toast.LENGTH_SHORT).show();
+            		Log.e(TAG, "CreateMyLocation: My location is null. Problem finding location.");
+            	}
             }
-        });
-        
+        });        
         Log.d(TAG, "CreateMyLocation: MyLocationOverlay Created!");
     }
         
@@ -271,12 +267,7 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) 
-        {
-            //case R.id.menu_add: 
-            	//Trigger action bar add press
-            	//actionBar.new AddFountainAction().performAction(mapView);
-            //    return true;
+        switch (item.getItemId()){
             case R.id.menu_refresh:
             	//Trigger action bar refresh press
             	actionBar.new RefreshAction().performAction(mapView);
@@ -306,113 +297,99 @@ public class MainActivity extends MapActivity implements OnDoubleTapListener, On
     /**
      * Lazy-loads fountain locations within an enlarged viewing range, creating markers,
      * and adding them to a custom fountain itemized (list of markers) overlay.
+     * 
+     * Notes: 
+     * 	We impose a cache of 75 overlay items before clearing and redrawing
+     * 		the cache. This allows us to prevent redrawing existing fountains; however,
+     * 		since we can't smoothly show hundreds of overlays, we limit the number
+     * 		of reused overlay items to 75.
      */
     public void DrawFountainLocations()
 	{
 	  	//If either or the mapview's dimensions is zero, don't draw anything. 
 		int mapHeight = mapView.getHeight(), mapWidth = mapView.getWidth();
-    	if(mapHeight == 0 && mapWidth == 0) 
-    	{
+    	if(mapHeight == 0 && mapWidth == 0){
     		Log.e(TAG, "DrawFountainLocations: MapView Dimensions are zeros!");
     		return;
     	}
 			
 	  	//If we're already drawing, then leave! Restricts other simultaneous draw calls.
-	  	if(isDrawingFountains) 
-  		{
+	  	if(isDrawingFountains){
 	  		Log.d(TAG, "DrawFountainLocations: Exiting to prevent redraw!");
   			return;
+  		} else {
+  			isDrawingFountains = true;
+  			Log.d(TAG, "DrawFountainLocations: Drawing Initiated!");
   		}
-	  	else 
-	  		isDrawingFountains = true;
 	  	
-	  	try
-	  	{
-		  	//A list of overlays for the current map
+	  	try{
 			List<Overlay> mapOverlays = mapView.getOverlays();
 			//Remove the current itemized overlay from the mapview since we'll repopulate it.
 			mapOverlays.remove(currentItemizedOverlay);
 			
-			//We impose a cache of 75 overlay items before clearing and redrawing
-			//The cache allows us to prevent redrawing existing fountains; however,
-			//	since we can't smoothly show hundreds of overlays, we limit the number
-			//	of reused overlay items to 75
-			if(currentItemizedOverlay.size() > 75)
-				//Clear the list of managed overlay items
-				currentItemizedOverlay.clear();
-			
 			//Scales the viewing rectangle to pull more fountains and avoid overlay popping.
 			//Pixel amounts for padding the edges of the viewing rectangle.
 			int sw = mapWidth / 2;	//Scale width
-			int sh = mapHeight / 2;	//Scale height
+			int sh = mapHeight / 2;	//Scale height 
 			
 			topLeft.initFromGeoPoint(mapView.getProjection().fromPixels(-sw, -sh));
 			topRight.initFromGeoPoint(mapView.getProjection().fromPixels(mapWidth + sw, -sh));
 			botLeft.initFromGeoPoint(mapView.getProjection().fromPixels(-sw, mapHeight + sh));
 			botRight.initFromGeoPoint(mapView.getProjection().fromPixels(mapWidth + sw, mapHeight + sh));
 			
-			//Load the fountains within viewing range
-			ArrayList<Fountain> fountains = dbAdapter.SelectFountainsInRange(topLeft, topRight, botRight, botLeft);
+			ArrayList<Fountain> fountains = dbAdapter.SelectFountainsInRange(topLeft, topRight, 
+																			botRight, botLeft, 
+																			75); //Limit
 			int numFountains = fountains.size();
+			Log.d(TAG, "DrawFountainLocations: " + numFountains + " fountains in range.");
 			//During the fresh install, there is no data in the database, yielding 0 results
-			if(numFountains == 0) 
-			{
-				Log.d(TAG, "DrawFountainLocations: No fountains exist for drawing.");
+			if(numFountains == 0){
 				isDrawingFountains = false;
+				Log.d(TAG, "DrawFountainLocations: Drawing Terminated! No Fountains Exist for Drawing");
 				return;		
-			}
+			}			
+			//Create fountain overlays for each fountain in range
+			//ArrayList<FountainOverlayItem> overlayItems = new ArrayList<FountainOverlayItem>();
+			LinkedList<FountainOverlayItem> overlayItems = new LinkedList<FountainOverlayItem>();
 			
-			//For every fountain in range
-			for(int i = 0; i < numFountains; i++)
-			{
-				//Cache the current fountain
-				Fountain f = fountains.get(i);
-				//Create a custom overlay item at the fountain's location with its model data
-				FountainOverlayItem overlayitem = new FountainOverlayItem(f.getCoordinates(), f);
-	    		//Set the marker drawable to be drawn for the overlay item
-	    		overlayitem.setMarker(currentDrawable);
-	    		currentItemizedOverlay.addOverlay(overlayitem);
-	    		//Release the fountain object
-				dbAdapter.pool.release(f);
-			}
-			
+			for(int i = 0; i < numFountains; i++) 
+				overlayItems.add(new FountainOverlayItem(fountains.get(i), currentDrawable));
+	    		
+			currentItemizedOverlay.addOverlays(overlayItems);    	
 			//Add the newly populated overlay items
 	    	mapOverlays.add(currentItemizedOverlay);
 	    	//Force the redrawing of the mapview to avoid artifacts
-	    	mapView.postInvalidate();
-	    	
-	    	Log.d(TAG, "DrawFountainLocations: " + currentItemizedOverlay.size() + " fountains drawn!");
-	  	}
-	  	catch(Exception e)
-	  	{
+	    	mapView.postInvalidate();	   
+	    	Log.d(TAG, "DrawFountainLocations: Map View Redrawn!");
+	    	Log.d(TAG, "DrawFountainLocations: Itemized Overlay contains " + currentItemizedOverlay.size() + " fountains!");
+	  	} catch(Exception e){
 	  		Log.e(TAG, "DrawFountainLocations: " + e);
 	  	}
 	  	
 	  	//Reset the flag to allow for another draw call
     	isDrawingFountains = false;
+    	Log.d(TAG, "DrawFountainLocations: Drawing Terminated.");
   	}
   
     /**
      * On a user's double tap, trigger a zoom in action
      */
 	@Override
-	public boolean onDoubleTap(MotionEvent e)
-	{
+	public boolean onDoubleTap(MotionEvent e){
 		mapView.getController().zoomIn();
+		DrawFountainLocations();		
+		Log.d(TAG, "onDoubleTap: doubleTap Zoom triggered Redraw!");
+		
 		return true;
 	}
 
 	@Override
-	public boolean onDoubleTapEvent(MotionEvent e)
-	{
-		// TODO Auto-generated method stub
+	public boolean onDoubleTapEvent(MotionEvent e){
 		return false;
 	}
 
 	@Override
-	public boolean onSingleTapConfirmed(MotionEvent e)
-	{
-		// TODO Auto-generated method stub
+	public boolean onSingleTapConfirmed(MotionEvent e){
 		return false;
 	}
 	

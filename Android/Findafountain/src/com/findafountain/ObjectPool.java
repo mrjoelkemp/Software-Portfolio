@@ -67,7 +67,7 @@ final class ObjectPool<T extends ObjectPool.Poolable> {
 
     private final ArrayList<T> objects;
     private final PoolableFactory<T> factory;
-    private int numBorrowed;
+    private int numBorrowed, maxNumBorrowed;
 
     /**
      * Creates a new object pool with the specified initial size.
@@ -81,6 +81,7 @@ final class ObjectPool<T extends ObjectPool.Poolable> {
         this.objects = new ArrayList<T>(initialSize);
         this.factory = factory;
         this.numBorrowed = 0;
+        this.maxNumBorrowed = 0;
         for (int i = 0; i < initialSize; i++) {
                 objects.add(factory.makeObject());
         }
@@ -98,6 +99,10 @@ final class ObjectPool<T extends ObjectPool.Poolable> {
                 obj = objects.remove(objects.size() - 1);
         }
         numBorrowed++;
+        if(numBorrowed > maxNumBorrowed){
+        	maxNumBorrowed = numBorrowed;
+        	Log.d(TAG, "Max Borrowed = " + maxNumBorrowed + " objects!");
+        }
         obj.setReleased(false);
         Log.d(TAG, "Borrow: Object borrowed." + "#Borrowed: " + numBorrowed);
         return obj;
@@ -105,21 +110,27 @@ final class ObjectPool<T extends ObjectPool.Poolable> {
 
     /**
      * Releases an object to the pool. It must be taken care that the reference to this object
-     * is no more used in the code peaces after the call to release.
+     * is no longer used in the system after the call to release.
      * 
-     * @param obj
-     *            the poolable object to be released back to the pool.
+     * @param obj the poolable object to be released back to the pool.
      */
     public void release(T obj) {
-        if (obj != null && !obj.isReleased()) 
-        {
+        if (obj != null && !obj.isReleased()){
             objects.add(obj);
             numBorrowed--;
             obj.setReleased(true);
         }
         Log.d(TAG, "Object released!" + "#Burrowed: " + numBorrowed);
     }
-
+    /**
+     * Releases all objects in the array to the pool.
+     * @param objs
+     */
+    public void release(ArrayList<T> objs){
+    	for (T obj : objs)
+    		release(obj);
+    }
+    
     /**
      * Removes all poolable objects from the pool. Normally they should than be targets of the
      * garbage collection.

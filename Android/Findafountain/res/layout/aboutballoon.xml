@@ -20,26 +20,29 @@
 		android:id="@+id/balloon_inner_layout">
 		<TextView
 			android:id="@+id/about_author" 
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:gravity="center_vertical|center_horizontal"
 		    android:text="@string/about_author_name" 
+		    android:textSize="15dip"
+		    android:textScaleX = "1.2"
+		    android:paddingLeft="20dip"
 		    android:textColor = "@color/black"/>
 	    <TextView
-			android:id="@+id/about_email" 
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/about_email" 
-		    android:textColor = "@color/black"/>
-	    <TextView
-			android:id="@+id/about_website" 
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
+			android:id="@+id/about_website" 		    
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:gravity="center_vertical|center_horizontal"
 		    android:text="@string/about_website" 
+		    android:paddingLeft="20dip"
+		    android:textStyle="bold"
 		    android:textColor = "@color/black"/>
 	   <TextView
 			android:id="@+id/about_message" 
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:gravity="center_vertical|center_horizontal"
+		    android:paddingLeft="20dip"
 		    android:text="@string/about_message" 
 		    android:textColor = "@color/black"/>
 	</LinearLayout>    
@@ -49,7 +52,7 @@
 			android:id="@+id/close_img_button" 
 			android:paddingLeft="10dip"
 			android:paddingBottom="10dip" 
-			android:paddingRight="8dip"
+			android:paddingRight="1dip"
 			android:paddingTop="8dip">
 	</ImageView>   
 </LinearLayout>

@@ -3,7 +3,9 @@ package com.findafountain;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+import android.app.Application;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +13,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.markupartist.android.widget.ActionBar;
@@ -167,7 +170,7 @@ public class MyActionBar extends ActionBar
         		//	We have to wait until the async task notifies us of its completion.
         		//	The notification comes to our asynchandler.
 	        	//new GetFountainsAsyncTask(db, asyncHandler).execute("fountains/index.json");
-	        	new GetFountainsAsyncTask(db, asyncHandler).execute("fountains/index.json");
+	        	new GetOpenFountainsAsyncTask(db, asyncHandler).execute("rows.json");
 	        	
 	        	Log.d(TAG, "RefreshAction: Async Task Started...");
         	}

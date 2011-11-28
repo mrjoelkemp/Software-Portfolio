@@ -1,9 +1,7 @@
 package com.findafountain;
 
-import android.location.Location;
 import android.util.Log;
 
-import com.findafountain.ObjectPool.Poolable;
 import com.google.android.maps.GeoPoint;
 
 /**
@@ -14,12 +12,13 @@ import com.google.android.maps.GeoPoint;
  * We can also use this class in an object pool.
  * @author Joel
  */
-public class LongLat implements Comparable<LongLat>
+public class LongLat
 {
 	//Declared public to avoid useless accessor lookups
 	public double longitude;
 	public double latitude;
-	
+	private int cachedHashCode;
+	private static final String TAG = "LongLat";
 	/**
 	 * Initializes the LongLat object to a zero state.
 	 */
@@ -27,6 +26,7 @@ public class LongLat implements Comparable<LongLat>
 	{
 		longitude = 0;
 		latitude = 0;
+		cachedHashCode = 0;
 	}
 	
 	/**
@@ -46,54 +46,36 @@ public class LongLat implements Comparable<LongLat>
 	 * of the Double object directly.
 	 * @return The hashcode for this object.
 	 */
-	public int hashcode()
+	public int hashCode()
 	{
-		long v = Double.doubleToLongBits(longitude) + Double.doubleToLongBits(latitude);
+		//long v = Double.doubleToLongBits(longitude) + Double.doubleToLongBits(latitude);
 		//return new Double(longitude).hashCode() + new Double(latitude).hashCode();
-		return (int)(v^(v>>>32));
+		//return (int)(v^(v>>>32));
+		//return new Double(longitude).hashCode() ^ new Double(latitude).hashCode();
+		int hc = cachedHashCode;
+		if(hc == 0){
+			String s = Double.toString(longitude) + Double.toString(latitude);
+			hc = s.hashCode();
+			cachedHashCode = hc;
+		}
+		return hc;
 	}
 	
 	@Override
 	public boolean equals(Object o)
 	{
 		//Self check
-		if(o==this) return true;
+		if(o == this) return true;
 		//Null or non-matching type check
-		if(o==null || !(o instanceof LongLat)) return false;
+		if(o == null || !(o instanceof LongLat)) return false;
 		
 		//Return true if longitudes and latitudes respectively match. 
-		LongLat cp= LongLat.class.cast(o);
-		return (longitude == cp.longitude) && (latitude == cp.latitude);
-	}
-
-	@Override
-	public int compareTo(LongLat another)
-	{
-		//The origin points in the geographical coordinate space.
-		double longOrigin = -180;
-		double latOrigin = -90;
+		LongLat cp = LongLat.class.cast(o);
 		
-		/**
-		 * To determine if I am larger than another, compute each of our Euclidean distances from the 
-		 * origin (-180, -90) and compare the distances to see who's larger.
-		 */
-		
-		//Compute the distance between myself and the origin
-		double myDistance = Math.sqrt(Math.pow(longitude - longOrigin, 2) + Math.pow(latitude - latOrigin, 2));
-		double anotherDistance = Math.sqrt(Math.pow(another.longitude - longOrigin, 2) + Math.pow(another.latitude - latOrigin, 2));
-		
-		int result = 0;
-		if(myDistance < anotherDistance)
-			result = -1;
-		else if(myDistance > anotherDistance)
-			result = 1;
-		else
-		{
-			Log.e("MainActivity", "compareTo Equal: me = " + longitude + ", " + latitude +  
-					" another = " + another.longitude + ", " + another.latitude);
-			Log.e("MainActivity", "compareTo Equal: myDistance = " + myDistance + " anotherDistance = " + anotherDistance);
-		}
-		return result;
+		boolean isEqual = (longitude == cp.longitude) && (latitude == cp.latitude);
+//		Log.d(TAG, "longitude = " + longitude + " latitude = " + latitude);
+//		Log.d(TAG, "cp.longitude = " + cp.longitude + " cp.latitude = " + cp.latitude);
+		return isEqual;
 	}
 	
 	/**

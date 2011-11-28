@@ -188,7 +188,7 @@ public class GetFountainsAsyncTask extends AsyncTask<String, Integer, Integer>
 				double latitude = obj.getDouble(DBHelper.FountainTable.COL_LATITUDE);
 				
 				//Get a fountain object from the pool to populate
-				Fountain f = dbAdapter.pool.borrow();
+				Fountain f = DBAdapter.pool.borrow();
 				if(f == null) 
 				{
 					Log.e(TAG, "JSONtoFountain: Fountain object not borrowed. Pool is possibly full!");
@@ -200,7 +200,7 @@ public class GetFountainsAsyncTask extends AsyncTask<String, Integer, Integer>
 				f.setLatitude(latitude);
 				f.setLongitude(longitude);
 				//Store the fountain status as the description text in the status object
-				f.setStatus(statusObj.getString(DBHelper.StatusTable.COL_DESCRIPTION));
+				//f.setStatus(statusObj.getString(DBHelper.StatusTable.COL_DESCRIPTION));
 
 				readFountains.add(f);
 				
@@ -246,7 +246,7 @@ public class GetFountainsAsyncTask extends AsyncTask<String, Integer, Integer>
 		dbAdapter.AddOrUpdateFountains(fountains);
 		//Release the fountain objects back to the pool
 		for (int j = 0; j < num; j++)
-			dbAdapter.pool.release(fountains.get(j));
+			DBAdapter.pool.release(fountains.get(j));
 		//Clear the array list
 		fountains.clear();
 	}

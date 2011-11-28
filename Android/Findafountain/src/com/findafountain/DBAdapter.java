@@ -15,18 +15,22 @@ import android.util.Log;
  */
 public class DBAdapter
 {
-	private static String TAG = "DBAdapter";
+	private static final String TAG = "DBAdapter";
 	private DBHelper dbHelper;
+	
 	/**
 	 * Accessible Object pool to maintain the instantiations and reusing of fountain objects.
 	 * It's a design choice to make the dbAdapter manage the fountain pool.
 	 */
-	public ObjectPool<Fountain> pool;
+	public static ObjectPool<Fountain> pool;
 	
 	/**
 	 * The total number of possible fountain objects in the object pool.
+	 * Each fountain needs 21 bytes for attributes. 
+	 * We want to make the pool large to minimize the number of trips 
+	 * 	to the database when flushing progressively fountains.
 	 */
-	private final static int POOL_SIZE = 100;
+	private final static int POOL_SIZE = 575;	//Needs about 10.5K of Heap
 	public DBAdapter(Context c) 
 	{
 		dbHelper = new DBHelper(c);
@@ -39,20 +43,20 @@ public class DBAdapter
 	 * 								 longitude <= topRight.longitude and
 	 * 								 latitude <= topLeft.latitude and
 	 * 								 latitude >= bottomLeft.latitude; 
+	 * @param limit The max number of results to retrieve
 	 * @return List of fountains within the range.
 	 */
-	public ArrayList<Fountain> SelectFountainsInRange(LongLat topLeft, LongLat topRight, LongLat bottomRight, LongLat bottomLeft)
+	public ArrayList<Fountain> SelectFountainsInRange(LongLat topLeft, LongLat topRight, LongLat bottomRight, LongLat bottomLeft, int limit)
 	{
-		//List to hold the fountains in range
 		ArrayList<Fountain> fountains = new ArrayList<Fountain>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		try
-		{
+		try {
 			String q = "select * from " + DBHelper.FountainTable.NAME + " where " +
 			DBHelper.FountainTable.COL_LONGITUDE + " >= '" + topLeft.longitude + "' and " + 
 			DBHelper.FountainTable.COL_LONGITUDE + " <= '" + topRight.longitude + "' and " + 
 			DBHelper.FountainTable.COL_LATITUDE + " <= '" + topLeft.latitude + "' and " + 
-			DBHelper.FountainTable.COL_LATITUDE + " >= '" + bottomLeft.latitude + "'";
+			DBHelper.FountainTable.COL_LATITUDE + " >= '" + bottomLeft.latitude + "'" +
+			" LIMIT " + Integer.toString(limit);
 			
 			Log.d(TAG, "topLeft: " + topLeft.longitude + ", " + topLeft.latitude + 
 						" topRight: " + topRight.longitude + ", " + topRight.latitude);
@@ -62,12 +66,10 @@ public class DBAdapter
 			Cursor c = db.rawQuery(q, null);
 			
 			//If a row was found
-	        if (c.getCount() > 0) 
-	        {
+	        if (c.getCount() > 0) {
 	        	//Go to the front of the list
 	            c.moveToFirst();
-	            do 
-	            {	                	            	
+	            do{	                	            	
 	            	//Grab an available fountain from the pool.
 	                Fountain f = pool.borrow();
 	                //Fountain f = new Fountain();
@@ -75,30 +77,23 @@ public class DBAdapter
 	                f.setId(c.getInt(c.getColumnIndex(DBHelper.FountainTable.COL_ID)));
 	                f.setLongitude(c.getDouble(c.getColumnIndex(DBHelper.FountainTable.COL_LONGITUDE)));
 	                f.setLatitude(c.getDouble(c.getColumnIndex(DBHelper.FountainTable.COL_LATITUDE)));
-	                f.setStatus(c.getString(c.getColumnIndex(DBHelper.FountainTable.COL_STATUS)));
 	                
 	                //Add the dummy object to the list of fountains
 	                fountains.add(f);
 	               
 	                Log.d(TAG, "Within Range: " + f.getLongitude() + ", " + f.getLatitude());
-	            } 
-	            while (c.moveToNext());
+	            } while (c.moveToNext());
 	        }
 	        
 	        //Close the cursor for memory cleanup
 	        c.close();
-	    } 
-	    catch (Exception e)
-	    {
+	    } catch (Exception e){
 	    	Log.e(TAG, "SelectFountainsWithinRange: " + e);
 	    }
-	    finally 
-	    {
-	        if (db != null)
-	            db.close();
+	    finally{
+	        if (db != null) db.close();
 	        Log.d(TAG, "SelectFountainsWithinRange: " + fountains.size() + " fountains fetched.");
 	    }
-
 		return fountains;	
 	}
 	
@@ -110,14 +105,12 @@ public class DBAdapter
 	{
 		Fountain f = null;
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		try
-		{
+		try	{
 			Cursor c = db.rawQuery("select * from " + DBHelper.FountainTable.NAME + " where " +
 					DBHelper.FountainTable.COL_ID + " ='" + id + "';", null);
 			
 			//If a row was found
-	        if (c.getCount() > 0) 
-	        {
+	        if (c.getCount() > 0) {
 	        	//Go to the front of the list
 	            c.moveToFirst();
 	            //Create a dummy fountain to fill
@@ -126,19 +119,15 @@ public class DBAdapter
                 f.setId(c.getInt(c.getColumnIndex(DBHelper.FountainTable.COL_ID)));
                 f.setLongitude(c.getDouble(c.getColumnIndex(DBHelper.FountainTable.COL_LONGITUDE)));
                 f.setLatitude(c.getDouble(c.getColumnIndex(DBHelper.FountainTable.COL_LATITUDE)));
-                f.setStatus(c.getString(c.getColumnIndex(DBHelper.FountainTable.COL_STATUS)));
 	        }
 			//Close the cursor
 			c.close();
 		}
-		catch (Exception e)
-		{
+		catch (Exception e){
 			Log.e(TAG, "SelectFountain: " + e);
 		}
-		finally
-		{
-			if(db != null)
-				db.close();
+		finally{
+			if(db != null)db.close();
 		}
 		return f;
 	}
@@ -171,7 +160,6 @@ public class DBAdapter
 	                f.setId(c.getInt(c.getColumnIndex(DBHelper.FountainTable.COL_ID)));
 	                f.setLongitude(c.getDouble(c.getColumnIndex(DBHelper.FountainTable.COL_LONGITUDE)));
 	                f.setLatitude(c.getDouble(c.getColumnIndex(DBHelper.FountainTable.COL_LATITUDE)));
-	                f.setStatus(c.getString(c.getColumnIndex(DBHelper.FountainTable.COL_STATUS)));
 	                
 	                //Add the dummy object to the list of fountains
 	                results.add(f);
@@ -214,7 +202,6 @@ public class DBAdapter
 	    		values.put(DBHelper.FountainTable.COL_ID, f.getId());
 	            values.put(DBHelper.FountainTable.COL_LONGITUDE, f.getLongitude());
 	            values.put(DBHelper.FountainTable.COL_LATITUDE, f.getLatitude());
-	            values.put(DBHelper.FountainTable.COL_STATUS, f.getStatus());
 		 
 	            //Insert the data into the fountains table
 		        db.insert(DBHelper.FountainTable.NAME, "", values);
@@ -258,7 +245,6 @@ public class DBAdapter
     		values.put(DBHelper.FountainTable.COL_ID, f.getId());
             values.put(DBHelper.FountainTable.COL_LONGITUDE, f.getLongitude());
             values.put(DBHelper.FountainTable.COL_LATITUDE, f.getLatitude());
-            values.put(DBHelper.FountainTable.COL_STATUS, f.getStatus());
 	 
             //Insert the data into the fountains table
 	        db.insert("fountains", "", values);
@@ -364,7 +350,6 @@ public class DBAdapter
 	    		values.put(DBHelper.FountainTable.COL_ID, f.getId());
 	            values.put(DBHelper.FountainTable.COL_LONGITUDE, f.getLongitude());
 	            values.put(DBHelper.FountainTable.COL_LATITUDE, f.getLatitude());
-	            values.put(DBHelper.FountainTable.COL_STATUS, f.getStatus());
 	           
 	            //Insert or update the row automatically using SQL Replace
 	            db.replace(DBHelper.FountainTable.NAME, "", values);
