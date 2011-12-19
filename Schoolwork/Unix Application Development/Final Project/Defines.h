@@ -2,6 +2,7 @@
 #define _DEFINES_H
 
 #include <curses.h>
+#include <string.h>
 
 //Represents a collection of useful helper functions.
 class Defines{
