@@ -1,0 +1,8 @@
+Author: 	Joel Kemp
+Course: 	Topics in AI, CCNY
+Project: 	Tic Tac Toe Genetic Algorithm Solver
+Created: 	Fall 2011
+
+This project is a genetic algorithm solver for the Tic Tac Toe problem. The system was built using Matlab 2011b.
+
+The report detailing the processes implemented can be found in the "report" directory.
