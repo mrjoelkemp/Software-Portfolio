@@ -1,2 +1,0 @@
-C:\Users\Joel\Desktop\My Dropbox\Monika Gift\GiftXNA\GiftXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Joel\Desktop\My Dropbox\Other Stuff\Monika Gift\GiftXNA\GiftXNA\Content\obj\x86\Debug\ResolveAssemblyReference.cache
